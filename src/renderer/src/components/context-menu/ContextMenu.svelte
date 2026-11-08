@@ -76,7 +76,7 @@
             role="menu"
     >
         <ul
-            class="menu bg-black/90 rounded-box w-56 border border-base-300 p-1 shadow-xl overflow-visible"
+            class="menu bg-black/90 rounded-sm w-56 border border-base-300 p-1 shadow-xl overflow-visible"
         >
             {#each data.items as item}
                 {#if item.subItems}
@@ -98,7 +98,7 @@
                 </div>
             </summary>
 
-            <ul class="dropdown-content menu bg-base-100 rounded-box z-[60] w-40 p-2 shadow-xl border border-base-300">
+            <ul class="dropdown-content menu bg-base-100 rounded-sm z-[60] w-40 p-2 shadow-xl border border-base-300">
                 {#each item.subItems ?? [] as subItem}
                     {@render writeItem(subItem)}
                 {/each}
@@ -109,7 +109,7 @@
 
 {#snippet writeItem(item: ContextMenuItem)}
     <li><button
-        class="btn btn-sm btn-ghost flex flex-row gap-1 justify-start items-center"
+        class="btn btn-sm btn-ghost flex flex-row gap-1 justify-start items-center rounded-sm hover:bg-white/10"
         onclick={() => invokeAction(item.action)}
     >
         {#if item.icon}<item.icon size={14} />{/if}

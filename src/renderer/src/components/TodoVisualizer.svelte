@@ -27,17 +27,18 @@
    data-id={todo.id}
 >
   <label class="flex flex-row gap-3 w-full items-center">
-    <input type="checkbox" class="checkbox checkbox-sm checkbox-ghost"
+    <input type="checkbox" class="checkbox checkbox-sm checkbox-ghost bg-black/10 rounded-sm px-1.5"
            bind:checked={completed}
            onchange={() => toggleCompleted()}
     />
-    <span class="font-semibold {completedTextClasses()}">{todo.title}</span>
+    <span
+      class="font-semibold bg-black/10 rounded-sm px-1.5 cursor-pointer {completedTextClasses()}">{todo.title}</span>
   </label>
 
   <div class="flex flex-row gap-3 w-full items-center">
     <input type="checkbox" readonly class="checkbox checkbox-sm checkbox-ghost invisible" />
     {#if todo.description}
-      <p class="opacity-70 italic {completedTextClasses()}">{todo.description}</p>
+      <p class="opacity-70 italic bg-black/10 rounded-sm px-1.5 cursor-pointer {completedTextClasses()}">{todo.description}</p>
     {/if}
   </div>
 </section>
