@@ -1,0 +1,20 @@
+@import "tailwindcss";
+@plugin "daisyui" {
+  themes: night --default, light;
+}
+
+html, body, #app {
+  background: transparent; /* важно для прозрачного окна */
+  height: 100%;
+  overflow: hidden;
+  user-select: none;
+}
+
+@utility no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
