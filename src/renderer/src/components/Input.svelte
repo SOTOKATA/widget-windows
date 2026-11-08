@@ -17,6 +17,7 @@
         inlineLabel?: boolean;
         maxLength?: number;
         minLength?: number;
+        noWidget?: boolean;
     }
 
    let {
@@ -29,6 +30,7 @@
         value = $bindable(),
         disabled = false,
         description,
+        noWidget = false,
         error,
         inlineIcon = false,
         inlineLabel = false,
@@ -61,7 +63,7 @@
             <textarea
                 name={id}
                 {id}
-                onmousedown={() => enableTyping(this)}
+                onmousedown={() => { if (!noWidget) enableTyping(this) }}
                 bind:value
                 class="textarea w-full h-full bg-transparent! duration-100 transition-colors h-full resize-none focus:outline-none! focus:ring-0! {focused ? 'border-primary' : ''} {className}"
                 {required}
@@ -98,7 +100,7 @@
                     {/if}
                 </span>
                 <input
-                    onmousedown={() => enableTyping(this)}
+                  onmousedown={() => { if (!noWidget) enableTyping(this) }}
                     class="grow w-full text-xs focus:outline-none! focus:ring-0!"
                     {id}
                     name={id}
@@ -129,7 +131,7 @@
                 <input
                     class="input input-sm w-full bg-transparent! duration-100 transition-colors {focused ? 'border-primary' : ''} focus:outline-none! focus:ring-0! {className}"
                     {id}
-                    onmousedown={() => enableTyping(this)}
+                    onmousedown={() => { if (!noWidget) enableTyping(this) }}
                     name={id}
                     {type}
                     {required}

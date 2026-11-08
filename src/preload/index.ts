@@ -8,6 +8,11 @@ const api = {
     update: (id: string, todo: unknown) => ipcRenderer.invoke('todos:update', id, todo),
     remove: (id: string) => ipcRenderer.invoke('todos:remove', id),
     sync: () => ipcRenderer.invoke('todos:sync')
+  },
+  settings: {
+    open: () => ipcRenderer.invoke('settings:open'),
+    get: () => ipcRenderer.invoke('settings:get'),
+    save: (settings: unknown) => ipcRenderer.invoke('settings:save', settings)
   }
 }
 
@@ -26,7 +31,8 @@ if (process.contextIsolated) {
 
   try {
     contextBridge.exposeInMainWorld('widget', {
-      setFocusable: (value: boolean) => ipcRenderer.send('widget:focusable', value)
+      setFocusable: (value: boolean) =>
+        ipcRenderer.send('widget:focusable', value)
     })
   } catch (error) {
     console.error('Failed to expose widget API:', error)

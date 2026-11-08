@@ -3,8 +3,12 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import { Tray, Menu, nativeImage } from 'electron'
-import { placeTopRight } from './placer'
 import { initializeTursoDatabase } from './database/ipc'
+import { initializeSettingsWindow, openSettingsWindow } from './settingsWindow'
+import { applySettings, initializeSettingsHandle } from './settingsHandle'
+import { pinToDesktop } from './pin'
+
+let mainWindow: BrowserWindow | null = null
 
 function createWindow(): BrowserWindow {
   const mainWindow = new BrowserWindow({
@@ -47,9 +51,9 @@ function createWindow(): BrowserWindow {
 }
 
 function readyToShow(window: BrowserWindow): void {
-  placeTopRight(window)
+  applySettings(window)
   window.showInactive()
-  // pinToDesktop(window)
+  pinToDesktop(window)
 }
 
 function createTray(window: BrowserWindow): Tray {
@@ -61,6 +65,7 @@ function createTray(window: BrowserWindow): Tray {
   const menu = Menu.buildFromTemplate([
     { label: 'Show', click: () => window.show() },
     { label: 'Hide', click: () => window.hide() },
+    { label: 'Settings', click: () => openSettingsWindow() },
     { type: 'separator' },
     { label: 'Quit', click: () => app.quit() }
   ])
@@ -76,8 +81,10 @@ function createTray(window: BrowserWindow): Tray {
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(async () => {
   await initializeTursoDatabase()
-  // Set app user model id for windows
+  // Set app user model id for Windows integration, including startup registration.
   electronApp.setAppUserModelId('com.electron')
+  initializeSettingsWindow()
+  initializeSettingsHandle(() => mainWindow)
 
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.
@@ -89,12 +96,13 @@ app.whenReady().then(async () => {
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
 
-  createTray(createWindow())
+  mainWindow = createWindow()
+  createTray(mainWindow)
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
-    if (BrowserWindow.getAllWindows().length === 0) createWindow()
+    if (BrowserWindow.getAllWindows().length === 0) mainWindow = createWindow()
   })
 })
 

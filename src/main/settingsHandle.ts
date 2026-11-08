@@ -1,0 +1,84 @@
+import { app, BrowserWindow, ipcMain, screen } from 'electron'
+import fs from 'node:fs'
+import path from 'node:path'
+
+export type HeightPreset = 'small' | 'medium' | 'full'
+export type WidthPreset = 'small' | 'normal' | 'large'
+
+export interface Settings {
+  autoLaunch: boolean
+  position: 'left' | 'right'
+  height: HeightPreset
+  width: WidthPreset
+}
+
+const defaultSettings: Settings = {
+  autoLaunch: false,
+  position: 'right',
+  height: 'medium',
+  width: 'normal'
+}
+
+const widths: Record<WidthPreset, number> = { small: 320, normal: 400, large: 520 }
+const heights: Record<Exclude<HeightPreset, 'full'>, number> = { small: 620, medium: 1035 }
+const margin = 5
+
+function settingsPath(): string {
+  return path.join(app.getPath('userData'), 'settings.json')
+}
+
+function isSettings(value: Partial<Settings>): value is Settings {
+  return (
+    typeof value.autoLaunch === 'boolean' &&
+    (value.position === 'left' || value.position === 'right') &&
+    (value.height === 'small' || value.height === 'medium' || value.height === 'full') &&
+    (value.width === 'small' || value.width === 'normal' || value.width === 'large')
+  )
+}
+
+export function getSettings(): Settings {
+  try {
+    if (fs.existsSync(settingsPath())) {
+      const saved = JSON.parse(fs.readFileSync(settingsPath(), 'utf8')) as Partial<Settings>
+      if (isSettings(saved)) return saved
+    }
+  } catch (error) {
+    console.error('Unable to read settings:', error)
+  }
+  return defaultSettings
+}
+
+export function applySettings(window: BrowserWindow, settings = getSettings()): void {
+  const workArea = screen.getPrimaryDisplay().workArea
+  const width = widths[settings.width]
+  const height = settings.height === 'full' ? workArea.height : heights[settings.height]
+  const x = settings.position === 'left' ? workArea.x + margin : workArea.x + workArea.width - width - margin
+
+  window.setBounds({ x, y: workArea.y + margin, width, height: Math.min(height, workArea.height - margin * 2) })
+}
+
+function applyAutoLaunch(enabled: boolean): void {
+  if (process.platform === 'win32' || process.platform === 'darwin') {
+    app.setLoginItemSettings({ openAtLogin: enabled })
+  }
+}
+
+export function initializeSettingsHandle(getWidgetWindow: () => BrowserWindow | null): void {
+  applyAutoLaunch(getSettings().autoLaunch)
+
+  ipcMain.handle('settings:get', () => getSettings())
+  ipcMain.handle('settings:save', (_, candidate: Partial<Settings>) => {
+    if (!isSettings(candidate)) return false
+
+    try {
+      fs.writeFileSync(settingsPath(), JSON.stringify(candidate, null, 2), 'utf8')
+      applyAutoLaunch(candidate.autoLaunch)
+      const window = getWidgetWindow()
+      if (window && !window.isDestroyed()) applySettings(window, candidate)
+      return true
+    } catch (error) {
+      console.error('Unable to save settings:', error)
+      return false
+    }
+  })
+}

@@ -15,6 +15,13 @@ interface StoredTodo extends TodoPayload {
   deleted_at: string | null
 }
 
+interface WidgetSettings {
+  autoLaunch: boolean
+  position: 'left' | 'right'
+  height: 'small' | 'medium' | 'full'
+  width: 'small' | 'normal' | 'large'
+}
+
 declare global {
   interface Window {
     electron: ElectronAPI
@@ -25,6 +32,11 @@ declare global {
         update: (id: string, todo: Partial<TodoPayload>) => Promise<StoredTodo[]>
         remove: (id: string) => Promise<StoredTodo[]>
         sync: () => Promise<boolean>
+      }
+      settings: {
+        open: () => Promise<void>
+        get: () => Promise<WidgetSettings>
+        save: (settings: WidgetSettings) => Promise<boolean>
       }
     }
     widget: {
