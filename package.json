@@ -3,13 +3,14 @@
   "version": "1.0.0",
   "description": "An Electron application with Svelte and TypeScript",
   "main": "./out/main/index.js",
-  "author": "example.com",
+  "author": "sotok.com",
   "homepage": "https://electron-vite.org",
   "scripts": {
+    "dist": "vite build && electron-builder --win",
     "format": "prettier --plugin prettier-plugin-svelte --write .",
     "lint": "eslint --cache .",
     "typecheck:node": "tsc --noEmit -p tsconfig.node.json --composite false",
-    "svelte-check": "svelte-check --tsconfig ./tsconfig.json",
+    "svelte-check": "svelte-check --tsconfig ./tsconfig.web.json",
     "typecheck": "npm run typecheck:node && npm run svelte-check",
     "start": "electron-vite preview",
     "dev": "electron-vite dev",
@@ -20,12 +21,44 @@
     "build:mac": "npm run build && electron-builder --mac",
     "build:linux": "npm run build && electron-builder --linux"
   },
+  "build": {
+    "appId": "com.sotok.todowidget",
+    "productName": "Sotok's Todo Widget",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "out/**/*",
+      "resources/**/*",
+      "package.json",
+      "!src/**/*"
+    ],
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    },
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ]
+    }
+  },
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.2",
     "@electron-toolkit/utils": "^4.0.0",
     "@lucide/svelte": "^1.70.0",
     "@tursodatabase/sync": "^0.8.3",
     "electron-updater": "^6.8.9",
+    "esrap": "^2.4.0",
     "koffi": "^3.3.7"
   },
   "devDependencies": {
@@ -37,7 +70,7 @@
     "@types/node": "^24.19.2",
     "daisyui": "^5.7.50",
     "electron": "^44.7.2",
-    "electron-builder": "^26.15.3",
+    "electron-builder": "^26.18.0",
     "electron-vite": "^6.0.0",
     "eslint": "^10.12.0",
     "eslint-plugin-svelte": "^3.23.1",
