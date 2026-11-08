@@ -6,7 +6,7 @@ export async function initializeTursoDatabase(): Promise<void> {
   initializeIPC()
   await initializeTodosTable()
 
-  if (process.env.TURSO_DATABASE_URL) {
+  if (process.env.TODO_TURSO_DATABASE_URL) {
     try {
       await syncTodos()
     } catch (error) {
@@ -36,7 +36,7 @@ function initializeIPC(): void {
 }
 
 async function syncAfterMutation(): Promise<void> {
-  if (!process.env.TURSO_DATABASE_URL) return
+  if (!process.env.TODO_TURSO_DATABASE_URL) return
 
   await syncTodos()
 }
