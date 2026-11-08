@@ -83,7 +83,7 @@
 <ChangeTodoModal {onChangeTodo} todo={selectedTodo} bind:this={changeTodoModal} />
 <ContextMenu bind:openContextMenu data={currentContextMenuData} />
 
-<main class="w-full h-full max-h-full flex flex-col gap-3 border">
+<main class="w-full h-full max-h-full flex flex-col gap-3">
   <TodoHeader {todos} {addTodoModal} onSync={syncTodos} />
   <div class="max-h-full overflow-auto h-full flex flex-col gap-3 no-scrollbar" oncontextmenu={showContextMenu}>
     {#each todos as todo (todo.id)}
