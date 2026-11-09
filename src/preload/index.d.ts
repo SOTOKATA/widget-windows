@@ -13,6 +13,8 @@ interface StoredTodo extends TodoPayload {
   created_at: string
   updated_at: string
   deleted_at: string | null
+  complete_until: string | null
+  type: string
 }
 
 interface WidgetSettings {

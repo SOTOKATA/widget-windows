@@ -4,29 +4,38 @@
 
   interface Props {
     todos: Todo[];
-    addTodoModal: HTMLDialogElement | undefined;
     onSync: () => Promise<void>;
   }
 
   let {
     todos,
-    addTodoModal,
     onSync
   }: Props = $props();
+
+  let isSync: boolean = $state(false);
+  async function syncTodos(): void {
+    isSync = true;
+    await onSync();
+    isSync = false;
+  }
 </script>
 
 <section class="w-full flex flex-row gap-3 justify-between flex-wrap items-center">
-  <div class="flex flex-row gap-3 flex-wrap items-center">
-    <div class="font-bold text-lg">Todo</div>
-    <div class="opacity-70">{todos.length}</div>
+  <div class="flex flex-row gap-1 items-center">
+    <div class="font-bold text-lg">Sotok Todo </div>
+    <div class="opacity-70">({todos.length})</div>
   </div>
-  <button class="btn btn-sm btn-circle btn-ghost"
-    onclick={() => addTodoModal?.showModal()}
+  <button
+    class="btn btn-sm btn-ghost {isSync ? 'pointer-events-none' : 'btn-circle'}"
+    onclick={() => syncTodos()}
+    disabled={isSync}
+    aria-label="Sync todos"
   >
-    <Plus size={16} />
-  </button>
-  <button class="btn btn-sm btn-circle btn-ghost" onclick={() => onSync()} aria-label="Sync todos">
-    <RefreshCw size={16} />
+    {#if isSync}
+      <span class="loading loading-xs loading-spinnet"></span> Syncing
+    {:else}
+      <RefreshCw size={16} />
+    {/if}
   </button>
 </section>
 

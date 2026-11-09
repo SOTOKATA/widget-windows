@@ -4,7 +4,7 @@
     interface Props {
         id: string;
         icon?: any;
-        type: 'text' | 'email' | 'password' | 'tel' | 'textarea' | 'number';
+        type: 'text' | 'email' | 'password' | 'tel' | 'textarea' | 'number' | 'datetime-local';
         required?: boolean;
         label?: string;
         placeholder?: string;
@@ -17,6 +17,7 @@
         inlineLabel?: boolean;
         maxLength?: number;
         minLength?: number;
+        min?: string;
         noWidget?: boolean;
     }
 
@@ -32,6 +33,7 @@
         description,
         noWidget = false,
         error,
+        min = '',
         inlineIcon = false,
         inlineLabel = false,
         class: className,
@@ -105,6 +107,7 @@
                     {id}
                     name={id}
                     {type}
+                    {min}
                     {required}
                     {placeholder}
                     {disabled}
@@ -131,6 +134,7 @@
                 <input
                     class="input input-sm w-full bg-transparent! duration-100 transition-colors {focused ? 'border-primary' : ''} focus:outline-none! focus:ring-0! {className}"
                     {id}
+                    {min}
                     onmousedown={() => { if (!noWidget) enableTyping(this) }}
                     name={id}
                     {type}

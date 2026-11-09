@@ -28,7 +28,9 @@
       completed: todo.completed,
       createdAt: todo.created_at,
       updatedAt: todo.updated_at,
-      deletedAt: todo.deleted_at ?? undefined
+      deletedAt: todo.deleted_at ?? undefined,
+      completeUntil: todo.complete_until ?? undefined,
+      type: todo.type
     }))
   }
 
@@ -53,7 +55,7 @@
     todos = mapTodos(await window.api.todos.update(id, data))
   }
 
-  async function onChangeTodo(id: string, data: Pick<Todo, 'title' | 'description'>): Promise<void> {
+  async function onChangeTodo(id: string, data: Pick<Todo, 'title' | 'description' | 'completeUntil' | 'type'>): Promise<void> {
     await onUpdateTodo(id, data)
   }
 
@@ -83,7 +85,7 @@
 <ChangeTodoModal {onChangeTodo} todo={selectedTodo} bind:this={changeTodoModal} />
 <ContextMenu bind:openContextMenu data={currentContextMenuData} />
 
-<main class="w-full h-full max-h-full flex flex-col gap-3">
+<main class="w-full h-full max-h-full flex flex-col gap-3 bg-black/10 py-1 px-2">
   <TodoHeader {todos} {addTodoModal} onSync={syncTodos} />
   <div class="max-h-full overflow-auto h-full flex flex-col gap-3 no-scrollbar" oncontextmenu={showContextMenu}>
     {#each todos as todo (todo.id)}
