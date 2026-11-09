@@ -1,43 +1,35 @@
 ﻿<script lang="ts">
-  import type { Todo } from "../../typescript/Todo";
-  import Modal from "./Modal.svelte";
+  import { onMount } from 'svelte'
 
-  interface Props {
-    todo?: Todo;
-    modal: HTMLDialogElement | undefined;
-    onDeleteTodo: (id: string) => void;
-  }
+  let todoId = $state('')
+  let title = $state('')
+  let isProcess = $state(false)
 
-  let {
-    todo,
-    modal = $bindable(),
-    onDeleteTodo
-  }: Props = $props()
+  onMount(async () => {
+    const data = await window.api.todoModal.getData()
+    const todo = (await window.api.todos.getAll()).find((item) => item.id === data.todoId)
+    if (!todo) return window.api.todoModal.close()
 
-  async function submitForm(): Promise<void> {
-    if (!todo)
-      return;
+    todoId = todo.id
+    title = todo.title
+  })
 
-    await window.api.todos.remove(todo.id);
-    modal?.close();
-    onDeleteTodo(todo.id);
+  async function deleteTodo(): Promise<void> {
+    if (!todoId || isProcess) return
+
+    isProcess = true
+    await window.api.todos.remove(todoId)
+    await window.api.todoModal.close()
   }
 </script>
 
-<Modal title="Delete todo" id="delete-todo-modal" bind:self={modal}>
-  <div class="flex flex-col gap-3">
-    <div class="alert alert-warning" role="alert">
-      <span>Are you sure want to delete '{todo?.title}' todo?</span>
+<main class="min-h-screen bg-base-200 p-5">
+  <div class="flex flex-col gap-4">
+    <h1 class="text-lg font-bold">Delete Todo</h1>
+    <div class="alert alert-warning"><span>Are you sure you want to delete “{title}”?</span></div>
+    <div class="flex justify-end gap-3">
+      <button class="btn btn-sm btn-error" onclick={() => void deleteTodo()} disabled={isProcess}>Delete</button>
+      <button class="btn btn-sm btn-ghost" onclick={() => window.api.todoModal.close()}>Cancel</button>
     </div>
   </div>
-
-  {#snippet footer()}
-    <button class="btn btn-xs btn-error" onclick={() => submitForm()}>
-      Delete
-    </button>
-
-    <button class="btn btn-xs btn-ghost btn-primary" onclick={() => modal?.close()}>
-      Cancel
-    </button>
-  {/snippet}
-</Modal>
+</main>

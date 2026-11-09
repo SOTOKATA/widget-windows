@@ -2,18 +2,17 @@
 import { CircleX, Pencil } from '@lucide/svelte'
 
 export interface TodoItemContextMenuArgs {
-  changeTodoModal?: { openModal: () => void }
-  deleteTodoModal?: HTMLDialogElement | undefined;
+  todoId: string
 }
 export const TodoItemContextMenu: ContextMenuItem[] = [
   {
     label: 'Change',
     icon: Pencil,
-    action: (data: TodoItemContextMenuArgs) => data.changeTodoModal?.openModal()
+    action: (data: TodoItemContextMenuArgs) => window.api.todoModal.open('change', data.todoId)
   },
   {
     label: 'Delete',
     icon: CircleX,
-    action: (data: TodoItemContextMenuArgs) => data.deleteTodoModal?.showModal(),
+    action: (data: TodoItemContextMenuArgs) => window.api.todoModal.open('delete', data.todoId),
   }
 ]

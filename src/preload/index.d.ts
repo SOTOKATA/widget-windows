@@ -5,6 +5,8 @@ interface TodoPayload {
   title: string
   description?: string
   completed?: boolean
+  type?: 'neutral' | 'important' | 'critical'
+  completeUntil?: string
 }
 
 interface StoredTodo extends TodoPayload {
@@ -14,7 +16,7 @@ interface StoredTodo extends TodoPayload {
   updated_at: string
   deleted_at: string | null
   complete_until: string | null
-  type: string
+  type: 'neutral' | 'important' | 'critical'
 }
 
 interface WidgetSettings {
@@ -34,6 +36,14 @@ declare global {
         update: (id: string, todo: Partial<TodoPayload>) => Promise<StoredTodo[]>
         remove: (id: string) => Promise<StoredTodo[]>
         sync: () => Promise<boolean>
+      }
+      todoModal: {
+        open: (type: 'add' | 'change' | 'delete', todoId?: string) => Promise<void>
+        getData: () => Promise<{ type: 'add' | 'change' | 'delete'; todoId?: string }>
+        close: () => Promise<void>
+      }
+      todosChanged: {
+        subscribe: (callback: () => void) => () => void
       }
       settings: {
         open: () => Promise<void>

@@ -1,95 +1,34 @@
-﻿<script lang="ts">
-  import Modal from "./Modal.svelte";
-  import Input from "../Input.svelte";
-  import { createTodo, type Todo, type TodoType, TodoTypes } from "../../typescript/Todo";
-  import Select from "../Select.svelte";
+<script lang="ts">
+  import Input from '../Input.svelte'
+  import Select from '../Select.svelte'
+  import { createTodo, type TodoType, TodoTypes } from '../../typescript/Todo'
 
-  interface Props {
-    modal: HTMLDialogElement | undefined;
-    onAddTodo: (todo: Todo) => void;
-  }
+  let isProcess = $state(false)
+  let title = $state('')
+  let description = $state('')
+  let completeUntil = $state('')
+  let type: TodoType = $state('neutral')
 
   async function addTodo(): Promise<void> {
-    if (!title.trim()) return;
-    if (new Date(completeUntil) < new Date()) return;
-    if (isProcess) return;
+    if (!title.trim() || new Date(completeUntil) < new Date() || isProcess) return
 
-    isProcess = true;
-
-    const todo = createTodo({
-      title: title.trim(),
-      description: description.trim(),
-      type,
-      completeUntil
-    });
-
-    await window.api.todos.create(todo);
-    modal?.close();
-    onAddTodo(todo);
-    title = '';
-    description = '';
-    type = 'neutral';
-    completeUntil = '';
-
-    isProcess = false;
+    isProcess = true
+    await window.api.todos.create(createTodo({ title: title.trim(), description: description.trim(), type, completeUntil }))
+    await window.api.todoModal.close()
   }
-
-  let isProcess: boolean = $state(false);
-
-  let title: string = $state('');
-  let description: string = $state('');
-  let completeUntil: string = $state('');
-  let type: TodoType = $state();
-
-  let {
-    modal = $bindable(),
-    onAddTodo
-  }: Props = $props();
 </script>
 
-<Modal id="add-todo-modal" title="Add Todo" bind:self={modal}>
-  <form action="" class="flex flex-col gap-1.5">
-    <Input
-      label="Title"
-      id="title"
-      type="text"
-      bind:value={title}
-    />
-
-    <Input
-      label="Description"
-      id="description"
-      type="textarea"
-      bind:value={description}
-    />
-
-    <Input
-      label="Complete until"
-      id="complete_until"
-      type="datetime-local"
-      min={new Date().toISOString()}
-      bind:value={completeUntil}
-    />
-
-    <Select
-      label="Type"
-      id="type"
-      collection={TodoTypes}
-      getValue={(t) => t.value}
-      getLabel={(t) => t.label}
-      bind:value={type}
-    />
+<main class="min-h-screen bg-base-200 p-5">
+  <form class="flex flex-col gap-3" onsubmit={(event) => { event.preventDefault(); void addTodo() }}>
+    <h1 class="text-lg font-bold">Add Todo</h1>
+    <Input label="Title" id="title" type="text" bind:value={title} noWidget />
+    <Input label="Description" id="description" type="textarea" bind:value={description} noWidget />
+    <Input label="Complete until" id="complete_until" type="datetime-local" min={new Date().toISOString()}
+           bind:value={completeUntil} noWidget />
+    <Select label="Type" id="type" collection={TodoTypes} getValue={(item) => item.value} getLabel={(item) => item.label} bind:value={type} />
+    <div class="flex justify-end gap-3 pt-2">
+      <button class="btn btn-sm btn-primary" disabled={isProcess}>Add</button>
+      <button class="btn btn-sm btn-ghost" type="button" onclick={() => window.api.todoModal.close()}>Cancel</button>
+    </div>
   </form>
-
-  {#snippet footer()}
-    <button class="btn btn-xs btn-primary" onclick={() => addTodo()} disabled={isProcess}>
-      Add
-    </button>
-
-    <button class="btn btn-xs btn-ghost btn-neutral"
-      onclick={() => modal?.close()}
-    >
-      Close
-    </button>
-  {/snippet}
-</Modal>
+</main>

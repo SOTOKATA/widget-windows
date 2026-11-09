@@ -7,6 +7,7 @@ import { initializeTursoDatabase } from './database/ipc'
 import { initializeSettingsWindow, openSettingsWindow } from './settingsWindow'
 import { applySettings, initializeSettingsHandle } from './settingsHandle'
 import { pinToDesktop } from './pin'
+import { initializeTodoModalWindow } from './todoModalWindow'
 
 let mainWindow: BrowserWindow | null = null
 
@@ -84,6 +85,7 @@ app.whenReady().then(async () => {
   // Set app user model id for Windows integration, including startup registration.
   electronApp.setAppUserModelId('com.electron')
   initializeSettingsWindow()
+  initializeTodoModalWindow()
   initializeSettingsHandle(() => mainWindow)
 
   // Default open or close DevTools by F12 in development

@@ -13,6 +13,18 @@ const api = {
     open: () => ipcRenderer.invoke('settings:open'),
     get: () => ipcRenderer.invoke('settings:get'),
     save: (settings: unknown) => ipcRenderer.invoke('settings:save', settings)
+  },
+  todoModal: {
+    open: (type: 'add' | 'change' | 'delete', todoId?: string) => ipcRenderer.invoke('todo-modal:open', type, todoId),
+    getData: () => ipcRenderer.invoke('todo-modal:get-data'),
+    close: () => ipcRenderer.invoke('todo-modal:close')
+  },
+  todosChanged: {
+    subscribe: (callback: () => void) => {
+      const listener = () => callback()
+      ipcRenderer.on('todos:changed', listener)
+      return () => ipcRenderer.removeListener('todos:changed', listener)
+    }
   }
 }
 

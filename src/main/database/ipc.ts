@@ -1,4 +1,4 @@
-import { ipcMain } from 'electron'
+import { BrowserWindow, ipcMain } from 'electron'
 import { syncTodos } from './sync'
 import { create, getAll, initializeTodosTable, remove, update, type Todo } from './todos'
 
@@ -21,18 +21,25 @@ function initializeIPC(): void {
   ipcMain.handle('todos:create', async (_, todo: Todo) => {
     await create(todo)
     await syncAfterMutation()
+    notifyTodosChanged()
     return getAll()
   })
   ipcMain.handle('todos:update', async (_, id: string, todo: Partial<Todo>) => {
     await update(id, todo)
     await syncAfterMutation()
+    notifyTodosChanged()
     return getAll()
   })
   ipcMain.handle('todos:remove', async (_, id: string) => {
     await remove(id)
     await syncAfterMutation()
+    notifyTodosChanged()
     return getAll()
   })
+}
+
+function notifyTodosChanged(): void {
+  BrowserWindow.getAllWindows().forEach((window) => window.webContents.send('todos:changed'))
 }
 
 async function syncAfterMutation(): Promise<void> {
