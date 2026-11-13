@@ -4,7 +4,7 @@
 }
 
 html, body, #app {
-  background: transparent; /* важно для прозрачного окна */
+  background: transparent;
   height: 100%;
   overflow: hidden;
   user-select: none;
@@ -18,3 +18,8 @@ html, body, #app {
     display: none;
   }
 }
+
+.markdown { line-height: 1.4 }
+.markdown ul { @apply list-disc }
+.markdown ol { @apply list-decimal }
+.markdown li { @apply list-disc ms-4 }

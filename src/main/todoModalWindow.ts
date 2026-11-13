@@ -17,10 +17,15 @@ export function openTodoModal(type: TodoModalType, todoId?: string): void {
     todoModalWindow.close()
   }
 
+  const relativeHeight = type === 'delete' ? 200 : 300
+  const relativeWidth = type === 'delete' ? 380 : 560
+
   const window = new BrowserWindow({
-    width: type === 'delete' ? 380 : 440,
-    height: type === 'delete' ? 230 : 500,
-    resizable: false,
+    width: relativeWidth,
+    height: relativeHeight,
+    minWidth: relativeHeight,
+    minHeight: relativeWidth,
+    resizable: true,
     title: type === 'add' ? 'Add Todo' : type === 'change' ? 'Change Todo' : 'Delete Todo',
     autoHideMenuBar: true,
     webPreferences: {

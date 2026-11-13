@@ -1,6 +1,8 @@
 ﻿<script lang="ts">
   import type { Todo } from "../typescript/Todo";
   import { getDaysUntil } from "../typescript/adaptiveDate";
+  import { Marked, type Tokens } from "marked";
+  import ContentBreaker from "./ContentBreaker.svelte";
 
   interface Props {
     todo: Todo;
@@ -24,13 +26,27 @@
 
   function bgClasses(): string {
     if (todo.type === 'critical' || getDaysUntil(todo.completeUntil) === 'Tomorrow')
-      return 'px-3 py-2 rounded-md bg-error/30 border border-error/10';
+      return 'px-3 py-2 rounded-md bg-error/30 border border-error/40';
     else if (todo.type === 'important')
-      return 'px-3 py-2 rounded-md bg-warning/30 border border-warning/10';
-
-
-    return '';
+      return 'px-3 py-2 rounded-md bg-warning/30 border border-warning/40';
+    else return 'px-3 py-2 rounded-md bg-black/10 border border-black/5';
   }
+
+  const customMarked = new Marked({
+    async: false,
+    renderer: {
+      link({ href, title, tokens }: Tokens.Link) {
+        const text = this.parser.parseInline(tokens);
+        const titleAttr = title ? ` title="${title}"` : '';
+
+        return `<a href="${href}"${titleAttr} class="link" target="_blank" rel="noopener noreferrer">${text}</a>`;
+      }
+    }
+  });
+
+  let renderedDescription = $derived(
+    todo.description ? customMarked.parse(todo.description) : ''
+  );
 </script>
 
 <section class="flex flex-col {bgClasses()}"
@@ -56,7 +72,11 @@
   <div class="flex flex-row gap-3 w-full items-center">
     <input type="checkbox" readonly class="checkbox checkbox-sm checkbox-ghost invisible" />
     {#if todo.description}
-      <p class="opacity-70 italic cursor-pointer {completedTextClasses()}">{todo.description}</p>
+      <ContentBreaker sizeY={150}>
+        <p class="markdown {completedTextClasses()}">
+          {@html renderedDescription}
+        </p>
+      </ContentBreaker>
     {/if}
   </div>
 </section>

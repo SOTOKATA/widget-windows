@@ -1,5 +1,6 @@
 ﻿<script lang="ts">
   import { onMount } from 'svelte'
+  import Alert from "../Alert.svelte";
 
   let todoId = $state('')
   let title = $state('')
@@ -26,10 +27,12 @@
 <main class="min-h-screen bg-base-200 p-5">
   <div class="flex flex-col gap-4">
     <h1 class="text-lg font-bold">Delete Todo</h1>
-    <div class="alert alert-warning"><span>Are you sure you want to delete “{title}”?</span></div>
+    <Alert type="warning">
+      Are you sure you want to delete "{title}"?
+    </Alert>
     <div class="flex justify-end gap-3">
-      <button class="btn btn-sm btn-error" onclick={() => void deleteTodo()} disabled={isProcess}>Delete</button>
-      <button class="btn btn-sm btn-ghost" onclick={() => window.api.todoModal.close()}>Cancel</button>
+      <button class="btn btn-xs btn-error" onclick={() => void deleteTodo()} disabled={isProcess}>Delete</button>
+      <button class="btn btn-xs btn-ghost" onclick={() => window.api.todoModal.close()}>Cancel</button>
     </div>
   </div>
 </main>
