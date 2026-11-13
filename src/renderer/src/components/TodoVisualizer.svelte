@@ -72,7 +72,7 @@
   {#if todo.description}
     <div class="flex flex-row gap-3 w-full items-center">
       <input type="checkbox" readonly class="checkbox checkbox-sm checkbox-ghost invisible" />
-        <ContentBreaker sizeY={150}>
+        <ContentBreaker sizeY={150} bind:todo>
           <p class="markdown opacity-90 {completedTextClasses()}">
             {@html renderedDescription}
           </p>

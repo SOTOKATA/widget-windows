@@ -22,6 +22,7 @@ export interface Todo {
   createdAt?: string
   updatedAt?: string
   deletedAt?: string
+  alwaysOpen?: boolean
 }
 
 export type TodoType = 'neutral' | 'important'

@@ -7,6 +7,7 @@
   import TodoVisualizer from "../TodoVisualizer.svelte";
   import TodoHeader from "../TodoHeader.svelte";
   import ContextMenu from "../context-menu/ContextMenu.svelte";
+  import Input from "../Input.svelte";
 
   let todos: Todo[] = $state([])
   let selectedTodoId = $state('')
@@ -14,22 +15,27 @@
   let currentContextMenuData: ContextMenuData | undefined = $state()
   let openContextMenu: ((mouseEvent: MouseEvent) => void) | undefined = $state()
 
-  function mapTodos(rows: Awaited<ReturnType<typeof window.api.todos.getAll>>): Todo[] {
-    return rows.map((todo) => ({
-      id: todo.id,
-      title: todo.title,
-      description: todo.description,
-      completed: todo.completed,
-      createdAt: todo.created_at,
-      updatedAt: todo.updated_at,
-      deletedAt: todo.deleted_at ?? undefined,
-      completeUntil: todo.complete_until ?? undefined,
-      type: todo.type
-    }))
+  function mapTodos(rows: Awaited<ReturnType<typeof window.api.todos.getAll>>, localTodos): Todo[] {
+    console.log(Object.keys(localTodos))
+    return rows.map((todo) => {
+      const alwaysOpen: boolean = Object.keys(localTodos).some(x => x === 'todo_' + todo.id) ? localTodos['todo_' + todo.id] : false;
+      return {
+        id: todo.id,
+        title: todo.title,
+        description: todo.description,
+        completed: todo.completed,
+        createdAt: todo.created_at,
+        updatedAt: todo.updated_at,
+        deletedAt: todo.deleted_at ?? undefined,
+        completeUntil: todo.complete_until ?? undefined,
+        type: todo.type,
+        alwaysOpen
+      }
+    })
   }
 
   async function loadTodos(): Promise<void> {
-    todos = mapTodos(await window.api.todos.getAll())
+    todos = mapTodos(await window.api.todos.getAll(), await window.localTodoAPI.getAll())
   }
 
   async function syncTodos(): Promise<void> {
@@ -38,7 +44,7 @@
   }
 
   async function onUpdateTodo(id: string, data: Partial<Todo>): Promise<void> {
-    todos = mapTodos(await window.api.todos.update(id, data))
+    todos = mapTodos(await window.api.todos.update(id, data), await window.localTodoAPI.getAll())
   }
 
   function showContextMenu(event: MouseEvent): void {
@@ -68,6 +74,7 @@
 <ContextMenu bind:openContextMenu data={currentContextMenuData} />
 
 <main class="w-full h-full max-h-full flex flex-col gap-3 bg-black/10 py-1 px-2">
+  <Input id="" type="text" />
   <TodoHeader {todos} onSync={syncTodos} />
   <div class="max-h-full overflow-auto h-full flex flex-col gap-3 no-scrollbar" oncontextmenu={showContextMenu}>
     {#each todos as todo (todo.id)}

@@ -20,6 +20,7 @@
 
     isProcess = true
     await window.api.todos.remove(todoId)
+    await window.localTodoAPI.delete(todoId)
     await window.api.todoModal.close()
   }
 </script>

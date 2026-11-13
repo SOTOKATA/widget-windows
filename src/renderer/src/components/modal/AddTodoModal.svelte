@@ -13,9 +13,13 @@
     if (!title.trim() || new Date(completeUntil) < new Date() || isProcess) return
 
     isProcess = true
-    await window.api.todos.create(
-      createTodo({ title: title.trim(), description: description.trim(), type, completeUntil })
-    )
+
+    let todo = createTodo({ title: title.trim(), description: description.trim(), type, completeUntil });
+
+    await window.api.todos.create(todo)
+
+    await window.localTodoAPI.set(todo)
+
     await window.api.todoModal.close()
   }
 </script>

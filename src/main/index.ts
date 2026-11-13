@@ -8,6 +8,7 @@ import { initializeSettingsWindow, openSettingsWindow } from './settingsWindow'
 import { applySettings, initializeSettingsHandle } from './settingsHandle'
 import { pinToDesktop } from './pin'
 import { initializeTodoModalWindow } from './todoModalWindow'
+import './LocalTodoAPI'
 
 let mainWindow: BrowserWindow | null = null
 

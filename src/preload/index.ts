@@ -1,5 +1,6 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
+import { localTodoAPI } from './LocalTodoAPI'
 
 const api = {
   todos: {
@@ -30,6 +31,7 @@ const api = {
 
 if (process.contextIsolated) {
   try {
+    contextBridge.exposeInMainWorld('localTodoAPI', localTodoAPI)
     contextBridge.exposeInMainWorld('api', api)
   } catch (error) {
     console.error('Failed to expose database API:', error)
