@@ -37,40 +37,49 @@
   }
 </script>
 
-<main class="min-h-screen bg-base-200 p-5">
+<main class="min-h-screen bg-base-200 p-5 h-full">
   <form
-    class="flex flex-col gap-3"
+    class="flex flex-col gap-3 h-full"
     onsubmit={(event) => {
       event.preventDefault()
       void changeTodo()
     }}
   >
     <h1 class="text-lg font-bold">Change Todo</h1>
-    <Input label="Title" id="change-title" type="text" bind:value={title} noWidget />
+
+    <div>
+      <Input label="Title" id="title" type="text" bind:value={title} noWidget />
+    </div>
     <Input
       label="Description"
-      id="change-description"
+      id="description"
       type="textarea"
       bind:value={description}
       noWidget
-      class="resize-y!"
+      class="resize-none! min-h-0 flex-1 flex flex-col [&>textarea]:h-full [&>textarea]:flex-1 code [&>textarea]:bg-base-300 whitespace-pre overflow-x-auto"
     />
-    <Input
-      label="Complete until"
-      id="complete_until"
-      type="datetime-local"
-      min={new Date().toISOString()}
-      bind:value={completeUntil}
-      noWidget
-    />
-    <Select
-      label="Type"
-      id="type"
-      collection={TodoTypes}
-      getValue={(item) => item.value}
-      getLabel={(item) => item.label}
-      bind:value={type}
-    />
+    <div>
+      <Input
+        label="Complete until"
+        id="complete_until"
+        type="datetime-local"
+        min={new Date().toISOString()}
+        bind:value={completeUntil}
+        noWidget
+      />
+    </div>
+
+    <div>
+      <Select
+        label="Type"
+        id="type"
+        collection={TodoTypes}
+        getValue={(item) => item.value}
+        getLabel={(item) => item.label}
+        bind:value={type}
+      />
+    </div>
+
     <div class="flex justify-end gap-3 pt-2">
       <button class="btn btn-sm btn-primary" disabled={isProcess}>Save</button>
       <button

@@ -8,24 +8,41 @@
 
   let { children, sizeY = 200 }: Props = $props()
 
-  let isOpen: boolean = $state(false)
+  let isOpen = $state(false)
   let contentElement = $state<HTMLDivElement | null>(null)
+  let hasOverflow = $state(false)
 
-  let hasOverflow = $derived(contentElement ? contentElement.scrollHeight > sizeY : false)
+  $effect(() => {
+    if (contentElement) {
+      const updateOverflow = () => {
+        hasOverflow = contentElement!.scrollHeight > sizeY
+      }
+
+      updateOverflow()
+
+      const observer = new ResizeObserver(updateOverflow)
+      observer.observe(contentElement)
+
+      return () => observer.disconnect()
+    }
+  })
 </script>
 
-<section class="flex flex-col gap-3">
+<section class="flex flex-col gap-2">
   <div
-    style={isOpen ? '' : `max-height: ${sizeY}px;`}
     bind:this={contentElement}
-    class="overflow-y-hidden"
+    style="max-height: {isOpen ? (contentElement ? `${contentElement.scrollHeight}px` : 'none') : `${sizeY}px`};"
+    class="overflow-hidden transition-all duration-300 ease-in-out"
   >
     {@render children()}
   </div>
 
   {#if hasOverflow}
-    <button class="link flex flex-row" onclick={() => (isOpen = !isOpen)}>
-      {isOpen ? 'Hide' : 'See more...'}
+    <button
+      class="link flex flex-row cursor-pointer w-fit font-medium"
+      onclick={() => (isOpen = !isOpen)}
+    >
+      {isOpen ? 'Hide' : 'Show more...'}
     </button>
   {/if}
 </section>
