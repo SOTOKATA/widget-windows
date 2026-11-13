@@ -73,7 +73,7 @@
     <div class="flex flex-row gap-3 w-full items-center">
       <input type="checkbox" readonly class="checkbox checkbox-sm checkbox-ghost invisible" />
         <ContentBreaker sizeY={150}>
-          <p class="markdown {completedTextClasses()}">
+          <p class="markdown opacity-90 {completedTextClasses()}">
             {@html renderedDescription}
           </p>
         </ContentBreaker>

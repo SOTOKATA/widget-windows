@@ -39,7 +39,7 @@
 
   {#if hasOverflow}
     <button
-      class="link flex flex-row cursor-pointer w-fit font-medium"
+      class="link flex flex-row cursor-pointer w-fit text-sm font-medium"
       onclick={() => (isOpen = !isOpen)}
     >
       {isOpen ? 'Hide' : 'Show more...'}

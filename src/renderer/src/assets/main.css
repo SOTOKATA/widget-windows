@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
 @import "tailwindcss";
 @plugin "daisyui" {
-  themes: night --default, light;
+  themes: dark --default, light;
 }
 
 html, body, #app {
@@ -29,4 +29,4 @@ html, body, #app {
 .markdown ul { @apply list-disc }
 .markdown ol { @apply list-decimal }
 .markdown li { @apply list-disc ms-5 }
-.markdown table { @apply table }
+.markdown table { @apply table table-sm }
