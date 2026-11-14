@@ -12,9 +12,9 @@
   let type: TodoType = $state('neutral')
 
   onMount(async () => {
-    const { todoId: id } = await window.api.todoModal.getData()
-    const todo = (await window.api.todos.getAll()).find((item) => item.id === id)
-    if (!todo) return window.api.todoModal.close()
+    const { todoId: id } = await window.todoModalAPI.getData()
+    const todo = (await window.todoAPI.getAll()).find((item) => item.id === id)
+    if (!todo) return window.todoModalAPI.close()
 
     todoId = todo.id
     title = todo.title
@@ -27,13 +27,13 @@
     if (!todoId || !title.trim() || new Date(completeUntil) < new Date() || isProcess) return
 
     isProcess = true
-    await window.api.todos.update(todoId, {
+    await window.todoAPI.update(todoId, {
       title: title.trim(),
       description: description.trim(),
       completeUntil,
       type
     })
-    await window.api.todoModal.close()
+    await window.todoModalAPI.close()
   }
 </script>
 
@@ -85,7 +85,7 @@
       <button
         class="btn btn-sm btn-ghost"
         type="button"
-        onclick={() => window.api.todoModal.close()}>Cancel</button
+        onclick={() => window.todoModalAPI.close()}>Cancel</button
       >
     </div>
   </form>

@@ -16,11 +16,11 @@
 
     let todo = createTodo({ title: title.trim(), description: description.trim(), type, completeUntil });
 
-    await window.api.todos.create(todo)
+    await window.todoAPI.create(todo)
 
-    await window.localTodoAPI.set(todo)
+    await window.localTodoStorageAPI.set(todo)
 
-    await window.api.todoModal.close()
+    await window.todoModalAPI.close()
   }
 </script>
 
@@ -71,7 +71,7 @@
       <button
         class="btn btn-sm btn-ghost"
         type="button"
-        onclick={() => window.api.todoModal.close()}>Cancel</button
+        onclick={() => window.todoModalAPI.close()}>Cancel</button
       >
     </div>
   </form>

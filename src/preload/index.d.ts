@@ -1,4 +1,9 @@
 import { ElectronAPI } from '@electron-toolkit/preload'
+import { LocalTodoStorageAPI } from "./LocalTodoAPI";
+import { TodoAPI } from "./TodoAPI";
+import { TodoModalAPI } from "./TodoModalAPI";
+import { SettingsAPI } from "./SettingsAPI";
+import { DevToolsAPI } from "./devToolsAPI";
 
 interface TodoPayload {
   id: string
@@ -21,6 +26,7 @@ interface StoredTodo extends TodoPayload {
 
 interface WidgetSettings {
   autoLaunch: boolean
+  bgTransparency: number
   position: 'left' | 'right'
   height: 'small' | 'medium' | 'full'
   width: 'small' | 'normal' | 'large'
@@ -29,28 +35,11 @@ interface WidgetSettings {
 declare global {
   interface Window {
     electron: ElectronAPI
-    api: {
-      todos: {
-        getAll: () => Promise<StoredTodo[]>
-        create: (todo: TodoPayload) => Promise<StoredTodo[]>
-        update: (id: string, todo: Partial<TodoPayload>) => Promise<StoredTodo[]>
-        remove: (id: string) => Promise<StoredTodo[]>
-        sync: () => Promise<boolean>
-      }
-      todoModal: {
-        open: (type: 'add' | 'change' | 'delete', todoId?: string) => Promise<void>
-        getData: () => Promise<{ type: 'add' | 'change' | 'delete'; todoId?: string }>
-        close: () => Promise<void>
-      }
-      todosChanged: {
-        subscribe: (callback: () => void) => () => void
-      }
-      settings: {
-        open: () => Promise<void>
-        get: () => Promise<WidgetSettings>
-        save: (settings: WidgetSettings) => Promise<boolean>
-      }
-    }
+    localTodoStorageAPI: LocalTodoStorageAPI
+    todoAPI: TodoAPI
+    todoModalAPI: TodoModalAPI
+    settingsAPI: SettingsAPI
+    devToolsAPI: DevToolsAPI
     widget: {
       setFocusable: (value: boolean) => void
     }

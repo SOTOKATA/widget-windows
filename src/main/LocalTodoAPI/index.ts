@@ -1,6 +1,6 @@
 ﻿import { ipcMain } from 'electron'
 import Store from 'electron-store'
-import { Todo } from './database/todos'
+import { Todo } from '../database/todos'
 
 const store = new Store({
   defaults: {
@@ -9,18 +9,37 @@ const store = new Store({
 })
 
 ipcMain.handle('local-todo-api:get-settings', (_) => {
-  return store.get('todo-local-settings')
+  try {
+    return store.get('todo-local-settings')
+  } catch (e) {
+    console.error('local-todo-api:get-settings.error', e)
+  }
 })
 
 ipcMain.handle('local-todo-api:get-setting', (_, todoId: string) => {
-  return store.get(`todo-local-settings.${todoId}`)
+  try {
+    return store.get(`todo-local-settings.${todoId}`)
+  } catch (e) {
+    console.error('local-todo-api:get-setting.error', e)
+  }
 })
 
 ipcMain.handle('local-todo-api:set-setting', (event, todo: Todo) => {
-  return store.set(todo.id, { alwaysOpen: todo.alwaysOpen })
+  try {
+    return store.set(`todo-local-settings.${todo.id}`, {
+      alwaysOpen: todo.alwaysOpen,
+      pinned: todo.pinned
+    })
+  } catch (e) {
+    console.error('local-todo-api:set-setting.error', e)
+  }
 })
 
 ipcMain.handle('local-todo-api:delete-setting', (event, todoId: string) => {
-  store.delete(`todo-local-settings.${todoId}`)
-  return true
+  try {
+    store.delete(`todo-local-settings.${todoId}`)
+    return true
+  } catch (e) {
+    console.error('local-todo-api:delete-setting.error', e)
+  }
 })

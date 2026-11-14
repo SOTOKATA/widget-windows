@@ -1,4 +1,4 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
+import { app, shell, BrowserWindow, ipcMain, screen } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
@@ -14,14 +14,17 @@ let mainWindow: BrowserWindow | null = null
 
 function createWindow(): BrowserWindow {
   const mainWindow = new BrowserWindow({
+    minHeight: 500,
+    minWidth: 300,
     width: 400,
-    height: 1035,
+    height: 900,
     show: false,
     frame: false,
     focusable: false,
     type: 'toolbar',
     transparent: true,
-    resizable: false,
+    thickFrame: true,
+    resizable: true,
     skipTaskbar: true,
     hasShadow: false,
     autoHideMenuBar: true,
@@ -38,6 +41,10 @@ function createWindow(): BrowserWindow {
     if (value) mainWindow.focus()
   })
 
+  ipcMain.handle('dev:open-console', () => {
+    mainWindow.webContents.openDevTools()
+  })
+
   mainWindow.on('ready-to-show', () => readyToShow(mainWindow))
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
@@ -45,11 +52,24 @@ function createWindow(): BrowserWindow {
     return { action: 'deny' }
   })
 
+  screen.on('display-metrics-changed', () => {
+    sendScreenInfo(mainWindow)
+  })
+
   if (is.dev && process.env['ELECTRON_RENDERER_URL'])
     mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
   else mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
 
   return mainWindow
+}
+
+function sendScreenInfo(window: BrowserWindow): void {
+  const primaryDisplay = screen.getPrimaryDisplay();
+
+  const workArea = primaryDisplay.workArea; // { x, y, width, height }
+  const bounds = primaryDisplay.bounds; // Full screen size
+
+  window.webContents.send('screen-info-updated', { workArea, bounds });
 }
 
 function readyToShow(window: BrowserWindow): void {

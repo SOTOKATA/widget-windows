@@ -20,9 +20,12 @@
   }
 </script>
 
-<section class="w-full flex flex-row gap-3 justify-between flex-wrap items-center">
+<section class="w-full flex flex-row gap-3 justify-between flex-wrap items-center drag">
   <div class="flex flex-row gap-1 items-center">
-    <div class="font-bold text-lg">Sotok Todo </div>
+    <div class="font-bold text-lg">
+      <a href="https://github.com/SOTOKATA" target="_blank" class="font-mono link">@sotok</a>
+      Todos
+    </div>
     <div class="opacity-70">({todos.length})</div>
   </div>
   <button
@@ -40,3 +43,25 @@
 </section>
 
 <hr class="opacity-70">
+
+<style>
+  .drag {
+    -webkit-app-region: drag;
+    app-region: drag;
+  }
+
+  .no-drag {
+    -webkit-app-region: no-drag;
+    app-region: no-drag;
+  }
+
+  button {
+    -webkit-app-region: no-drag;
+    app-region: no-drag;
+  }
+
+  a {
+    -webkit-app-region: no-drag;
+    app-region: no-drag;
+  }
+</style>

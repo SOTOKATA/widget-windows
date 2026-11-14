@@ -7,11 +7,11 @@ export const TodoListContextMenu: ContextMenuItem[] = [
   {
     label: "Add",
     icon: Plus,
-    action: () => window.api.todoModal.open('add')
+    action: () => window.todoModalAPI.open('add')
   },
   {
     label: 'Settings',
     icon: Settings,
-    action: () => window.api.settings.open()
+    action: () => window.settingsAPI.open()
   }
 ]

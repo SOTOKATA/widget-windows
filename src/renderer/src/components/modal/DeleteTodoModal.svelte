@@ -7,9 +7,9 @@
   let isProcess = $state(false)
 
   onMount(async () => {
-    const data = await window.api.todoModal.getData()
-    const todo = (await window.api.todos.getAll()).find((item) => item.id === data.todoId)
-    if (!todo) return window.api.todoModal.close()
+    const data = await window.todoModalAPI.getData()
+    const todo = (await window.todoAPI.getAll()).find((item) => item.id === data.todoId)
+    if (!todo) return window.todoModalAPI.close()
 
     todoId = todo.id
     title = todo.title
@@ -19,9 +19,9 @@
     if (!todoId || isProcess) return
 
     isProcess = true
-    await window.api.todos.remove(todoId)
-    await window.localTodoAPI.delete(todoId)
-    await window.api.todoModal.close()
+    await window.todoAPI.remove(todoId)
+    await window.localTodoStorageAPI.delete(todoId)
+    await window.todoModalAPI.close()
   }
 </script>
 
@@ -33,7 +33,7 @@
     </Alert>
     <div class="flex justify-end gap-3">
       <button class="btn btn-xs btn-error" onclick={() => void deleteTodo()} disabled={isProcess}>Delete</button>
-      <button class="btn btn-xs btn-ghost" onclick={() => window.api.todoModal.close()}>Cancel</button>
+      <button class="btn btn-xs btn-ghost" onclick={() => window.todoModalAPI.close()}>Cancel</button>
     </div>
   </div>
 </main>

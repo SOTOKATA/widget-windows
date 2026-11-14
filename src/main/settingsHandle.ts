@@ -7,20 +7,14 @@ export type WidthPreset = 'small' | 'normal' | 'large'
 
 export interface Settings {
   autoLaunch: boolean
-  position: 'left' | 'right'
-  height: HeightPreset
-  width: WidthPreset
+  bgTransparency: number
 }
 
 const defaultSettings: Settings = {
   autoLaunch: false,
-  position: 'right',
-  height: 'medium',
-  width: 'normal'
+  bgTransparency: 90,
 }
 
-const widths: Record<WidthPreset, number> = { small: 320, normal: 400, large: 520 }
-const heights: Record<Exclude<HeightPreset, 'full'>, number> = { small: 620, medium: 1035 }
 const margin = 5
 
 function settingsPath(): string {
@@ -30,9 +24,7 @@ function settingsPath(): string {
 function isSettings(value: Partial<Settings>): value is Settings {
   return (
     typeof value.autoLaunch === 'boolean' &&
-    (value.position === 'left' || value.position === 'right') &&
-    (value.height === 'small' || value.height === 'medium' || value.height === 'full') &&
-    (value.width === 'small' || value.width === 'normal' || value.width === 'large')
+    [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100].includes(value.bgTransparency ?? -10)
   )
 }
 
@@ -49,12 +41,12 @@ export function getSettings(): Settings {
 }
 
 export function applySettings(window: BrowserWindow, settings = getSettings()): void {
-  const workArea = screen.getPrimaryDisplay().workArea
-  const width = widths[settings.width]
-  const height = settings.height === 'full' ? workArea.height : heights[settings.height]
-  const x = settings.position === 'left' ? workArea.x + margin : workArea.x + workArea.width - width - margin
-
-  window.setBounds({ x, y: workArea.y + margin, width, height: Math.min(height, workArea.height - margin * 2) })
+  window.webContents.send('settings:updated')
+  // const workArea = screen.getPrimaryDisplay().workArea
+  // const width = widths[settings.width]
+  // const height = settings.height === 'full' ? workArea.height : heights[settings.height]
+  // const x = settings.position === 'left' ? workArea.x + margin : workArea.x + workArea.width - width - margin
+  // window.setBounds({ x, y: workArea.y + margin, width, height: Math.min(height, workArea.height - margin * 2) })
 }
 
 function applyAutoLaunch(enabled: boolean): void {

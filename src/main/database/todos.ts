@@ -23,6 +23,7 @@ export interface Todo {
   updatedAt?: string
   deletedAt?: string
   alwaysOpen?: boolean
+  pinned?: boolean
 }
 
 export type TodoType = 'neutral' | 'important'

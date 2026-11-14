@@ -32,7 +32,7 @@
   async function updateOpen(): Promise<void> {
     isOpen = !isOpen
     todo.alwaysOpen = isOpen
-    await window.localTodoAPI.set(createTodo(todo))
+    await window.localTodoStorageAPI.set(createTodo(todo))
   }
 </script>
 
