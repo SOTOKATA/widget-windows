@@ -1,9 +1,9 @@
 {
   "name": "widget-windows",
-  "version": "1.0.7",
-  "description": "An Electron application with Svelte and TypeScript",
+  "version": "1.1.1",
+  "description": "Widget for todos",
   "main": "./out/main/index.js",
-  "author": "sotok.com",
+  "author": "sotok14.com",
   "homepage": "https://electron-vite.org",
   "scripts": {
     "dist": "electron-vite build && electron-builder --win",
@@ -22,8 +22,8 @@
     "build:linux": "npm run build && electron-builder --linux"
   },
   "build": {
-    "appId": "com.sotok.todowidget",
-    "productName": "Sotok's Todo Widget",
+    "appId": "com.sotok14.todowidget",
+    "productName": "Todos Widget",
     "directories": {
       "output": "dist"
     },

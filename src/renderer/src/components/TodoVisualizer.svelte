@@ -1,9 +1,10 @@
 ﻿<script lang="ts">
   import { getDaysUntil } from '../typescript/adaptiveDate'
   import { Marked, type Tokens } from 'marked'
-  import { Pin } from '@lucide/svelte'
+  import { Pin, LockKeyhole } from '@lucide/svelte'
   import type { Todo } from '@app-types/Todo'
   import { secretAreaExtension } from "../typescript/markedExtensions/secretAreaExtension";
+  import { globals } from "../typescript/globals.svelte";
 
   interface Props {
     todo: Todo
@@ -54,7 +55,7 @@
 
     if (!secret) return false;
 
-    secret.classList.toggle('blur-sm');
+    secret.classList.toggle('blur-xs');
     secret.classList.toggle('blur-none');
 
     return true;
@@ -115,9 +116,14 @@
     <!-- svelte-ignore a11y_click_events_have_key_events -->
     <!-- svelte-ignore a11y_no_static_element_interactions -->
     <div
-      class="flex flex-row gap-3 w-full items-center overflow-scroll no-scrollbar w-full h-full"
+      class="flex flex-row gap-3 w-full items-center overflow-scroll no-scrollbar w-full h-full relative"
       onclick={(e) => toggleSecret(e)}
     >
+      {#if secret}
+          <span class="absolute flex flex-col w-full h-full items-center justify-center opacity-70">
+            <LockKeyhole size={16} />
+          </span>
+      {/if}
       <input type="checkbox" readonly class="checkbox checkbox-sm checkbox-ghost invisible" />
       <p
         class="markdown opacity-90 {completedTextClasses()} duration-200 transition-all w-full h-full

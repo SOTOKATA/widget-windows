@@ -4,11 +4,10 @@
 
   interface Props {
     todos: Todo[]
-    bgHeaderTransparency: string
     onSync: () => Promise<void>
   }
 
-  let { todos, onSync, bgHeaderTransparency }: Props = $props()
+  let { todos, onSync }: Props = $props()
 
   let isSync: boolean = $state(false)
   async function syncTodos(): Promise<void> {
@@ -25,20 +24,31 @@
       <a href="https://github.com/SOTOKATA" target="_blank" class="font-mono link">@sotok</a>
       Todos
     </div>
-    <div class="opacity-70 font-mono">({todos.length})</div>
   </div>
-  <button
-    class="btn btn-sm btn-ghost {isSync ? 'pointer-events-none' : 'btn-circle'}"
-    onclick={() => syncTodos()}
-    disabled={isSync}
-    aria-label="Sync todos"
-  >
-    {#if isSync}
-      <span class="loading loading-xs loading-spinnet"></span> Syncing
-    {:else}
-      <RefreshCw size={16} />
-    {/if}
-  </button>
+
+  <div class="opacity-70 font-mono">({todos.length})</div>
+
+  <div class="flex flex-row gap-3 items-center">
+    <button
+      class="btn btn-xs btn-neutral opacity-70 font-mono"
+      onclick={() => window.devToolsAPI.openConsole()}
+    >
+      dev
+    </button>
+
+    <button
+      class="btn btn-sm btn-ghost {isSync ? 'pointer-events-none' : 'btn-circle'}"
+      onclick={() => syncTodos()}
+      disabled={isSync}
+      aria-label="Sync todos"
+    >
+      {#if isSync}
+        <span class="loading loading-xs loading-spinnet"></span> Syncing
+      {:else}
+        <RefreshCw size={16} />
+      {/if}
+    </button>
+  </div>
 </section>
 
 <div class="flex md:hidden">

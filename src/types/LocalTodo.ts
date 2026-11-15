@@ -14,6 +14,6 @@ export function localTodoFromTodo(todo: Todo): LocalTodo {
     id: cleanTodo.id,
     pinned: cleanTodo.pinned ?? false,
     position: cleanTodo.position ?? { x: 0, y: 0 },
-    size: cleanTodo.size ?? { width: 1, height: 1 }
+    size: cleanTodo.size ?? { width: 4, height: 2 }
   }
 }

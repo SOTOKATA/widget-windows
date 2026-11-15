@@ -13,30 +13,15 @@
 }
 
 export const borderTransparencies = {
-  100: '',
-  90: 'border-warning/20',
-  80: 'border-warning/30',
-  70: 'border-warning/40',
-  60: 'border-warning/50',
-  50: 'border-warning/60',
-  40: 'border-warning/70',
-  30: 'border-warning/80',
-  20: 'border-warning/90',
-  10: 'border-warning',
-  0: 'border-warning'
+  100: 'border-0!',
+  90: 'border-black/20',
+  80: 'border-black/30',
+  70: 'border-black/40',
+  60: 'border-black/50',
+  50: 'border-black/60',
+  40: 'border-black/70',
+  30: 'border-black/80',
+  20: 'border-black/90',
+  10: 'border-black',
+  0: 'border-black'
 }
-
-export const bgHeaderTransparencies = {
-  100: '',
-  90: 'bg-warning/20',
-  80: 'bg-warning/30',
-  70: 'bg-warning/40',
-  60: 'bg-warning/50',
-  50: 'bg-warning/60',
-  40: 'bg-warning/70',
-  30: 'bg-warning/80',
-  20: 'bg-warning/90',
-  10: 'bg-warning',
-  0: 'bg-warning'
-}
-

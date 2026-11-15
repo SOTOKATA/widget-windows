@@ -16,7 +16,7 @@
   import { type LocalTodo, localTodoFromTodo } from '@app-types/LocalTodo'
   import type { Todo } from '@app-types/Todo'
   import type { Settings } from '@app-types/Settings'
-  import { borderTransparencies, bgTransparencies, bgHeaderTransparencies } from "./todoWindowUtils";
+  import { borderTransparencies, bgTransparencies } from "./todoWindowUtils";
 
   let todos: Todo[] = $state([])
   let selectedTodoId = $state('')
@@ -153,13 +153,8 @@
     borderTransparency = borderTransparencies[s.bgTransparency]
   }
 
-  function refreshBgHeaderTransparency(s: Settings): void {
-    bgHeaderTransparency = bgHeaderTransparencies[s.bgTransparency]
-  }
-
   let bgTransparency: string = $state(bgTransparencies[globals.settings.bgTransparency])
   let borderTransparency: string = $state(borderTransparencies[globals.settings.bgTransparency])
-  let bgHeaderTransparency: string = $state(bgHeaderTransparencies[globals.settings.bgTransparency])
   async function handleItemChange(detail: LayoutChangeDetail): Promise<void> {
     const todo = todos.find((x) => x.id === detail.item.id)
 
@@ -176,7 +171,7 @@
   class="w-full h-full max-h-full flex flex-col gap-3 {bgTransparency} px-2 md:px-0 md:border-1 {borderTransparency}
    duration-250 transition-colors rounded-md"
 >
-  <TodoHeader {todos} onSync={syncTodos} {bgHeaderTransparency} />
+  <TodoHeader {todos} onSync={syncTodos} />
   <div
     class="max-h-full overflow-auto h-full flex flex-col gap-3 no-scrollbar md:hidden"
     oncontextmenu={showContextMenu}
@@ -210,14 +205,5 @@
         </GridItem>
       {/each}
     </Grid>
-  </div>
-
-  <div class="flex flex-row justify-end">
-    <button
-      class="btn btn-xs btn-neutral opacity-70 font-mono"
-      onclick={() => window.devToolsAPI.openConsole()}
-    >
-      dev
-    </button>
   </div>
 </main>

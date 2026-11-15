@@ -51,6 +51,6 @@ export function createTodo(data: TodoDataArgs): Todo {
     deletedAt: data.deletedAt,
     pinned: data.pinned,
     position: data.position ?? { x: 0, y: 0 },
-    size: data.size ?? { width: 1, height: 1 }
+    size: data.size ?? { width: 4, height: 2 }
   }
 }

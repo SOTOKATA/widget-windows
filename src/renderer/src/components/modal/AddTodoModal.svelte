@@ -3,15 +3,16 @@
   import Select from '../Select.svelte'
   import { type TodoType, createTodo, TodoTypes } from '@app-types/Todo'
   import { localTodoFromTodo } from '@app-types/LocalTodo'
-  import Checkbox from "../Checkbox.svelte";
-  import { KeyRound } from "@lucide/svelte";
+  import Checkbox from '../Checkbox.svelte'
+  import { KeyRound } from '@lucide/svelte'
+  import MarkdownRenderer from '../MarkdownRenderer.svelte'
 
   let isProcess = $state(false)
   let title = $state('')
   let description = $state('')
   let completeUntil = $state('')
   let type: TodoType = $state('neutral')
-  let secret: boolean = $state(false);
+  let secret: boolean = $state(false)
 
   async function addTodo(): Promise<void> {
     if (!title.trim() || new Date(completeUntil) < new Date() || isProcess) return
@@ -32,9 +33,13 @@
 
     await window.todoModalAPI.close()
   }
+
+  const placeholderDescription: string = `- Milk 1L
+- Bread
+- Eggs (12)`
 </script>
 
-<main class="min-h-screen bg-base-200 p-5 h-full">
+<main class="min-h-screen max-h-screen bg-base-200 p-5 h-full md:grid md:grid-cols-2 md:gap-3">
   <form
     class="flex flex-col gap-3 h-full"
     onsubmit={(event) => {
@@ -44,12 +49,13 @@
   >
     <h1 class="text-lg font-bold">Add Todo</h1>
     <div>
-      <Input label="Title" id="title" type="text" bind:value={title} noWidget />
+      <Input label="Title" id="title" type="text" bind:value={title} noWidget placeholder="Product list" />
     </div>
     <Input
       label="Description"
       id="description"
       type="textarea"
+      placeholder={placeholderDescription}
       bind:value={description}
       noWidget
       class="resize-none! min-h-0 flex-1 flex flex-col [&>textarea]:h-full [&>textarea]:flex-1 code whitespace-pre overflow-x-auto"
@@ -87,4 +93,14 @@
       >
     </div>
   </form>
+
+  <div class="md:block hidden overflow-auto relative">
+    <div class="absolute right-5 top-0.5 text-sm">
+      <div class="badge badge-xs badge-neutral rounded-xl">Description Preview</div>
+    </div>
+
+    <MarkdownRenderer
+      content={description.trim().length === 0 ? placeholderDescription : description}
+    />
+  </div>
 </main>

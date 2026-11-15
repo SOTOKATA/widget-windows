@@ -75,7 +75,7 @@ export const secretAreaExtension = {
 
     return `
       <span
-        class="secret-text blur-sm cursor-pointer select-none transition-all duration-300"
+        class="secret-text blur-xs cursor-pointer select-none transition-all duration-300"
         data-secret="true"
       >${html}</span>
     `

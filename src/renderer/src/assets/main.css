@@ -33,4 +33,4 @@ html, body, #app {
 .markdown h2 { @apply text-xl font-semibold mt-1 mb-2 }
 .markdown h3 { @apply text-lg font-semibold mt-1 mb-2 }
 .markdown h4 { @apply text-balance font-medium mt-1 mb-2 }
-.markdown blockquote { @apply border-s border-success border-s-2 rounded-sm ps-2.5 mt-1 mb-2}
+.markdown blockquote { @apply border-s border-s-2 rounded-sm ps-2.5 mt-1 mb-2}

@@ -5,6 +5,7 @@
   import { type TodoType, TodoTypes } from '@app-types/Todo'
   import { KeyRound } from "@lucide/svelte";
   import Checkbox from "../Checkbox.svelte";
+  import MarkdownRenderer from "../MarkdownRenderer.svelte";
 
   let todoId = $state('')
   let isProcess = $state(false)
@@ -42,7 +43,7 @@
   }
 </script>
 
-<main class="min-h-screen bg-base-200 p-5 h-full">
+<main class="min-h-screen bg-base-200 p-5 h-full w-full md:grid md:grid-cols-2 md:gap-3">
   <form
     class="flex flex-col gap-3 h-full"
     onsubmit={(event) => {
@@ -96,4 +97,12 @@
       >
     </div>
   </form>
+
+  <div class="md:block hidden overflow-auto relative">
+    <div class="absolute right-5 top-0.5 text-sm">
+      <div class="badge badge-xs badge-neutral rounded-xl">Description Preview</div>
+    </div>
+
+    <MarkdownRenderer content={description} />
+  </div>
 </main>
