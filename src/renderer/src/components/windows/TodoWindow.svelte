@@ -1,5 +1,4 @@
 ﻿<script lang="ts">
-  import { type Todo, createTodo } from '../../typescript/Todo'
   import type { ContextMenuData } from '../context-menu/ContextMenuData'
   import { TodoListContextMenu } from '../context-menu/TodoListContextMenu'
   import {
@@ -12,9 +11,12 @@
   import TodoHeader from '../TodoHeader.svelte'
   import ContextMenu from '../context-menu/ContextMenu.svelte'
   import { globals, onSettingsUpdate } from '../../typescript/globals.svelte'
-  import type { Settings } from '../../typescript/Settings'
   import Grid, { GridItem, type LayoutChangeDetail } from '@appulsauce/svelte-grid'
   import { GripVertical } from '@lucide/svelte'
+  import { type LocalTodo, localTodoFromTodo } from '@app-types/LocalTodo'
+  import type { Todo } from '@app-types/Todo'
+  import type { Settings } from '@app-types/Settings'
+  import { borderTransparencies, bgTransparencies, bgHeaderTransparencies } from "./todoWindowUtils";
 
   let todos: Todo[] = $state([])
   let selectedTodoId = $state('')
@@ -22,7 +24,10 @@
   let currentContextMenuData: ContextMenuData | undefined = $state()
   let openContextMenu: ((mouseEvent: MouseEvent) => void) | undefined = $state()
 
-  function mapTodos(rows: Awaited<ReturnType<typeof window.todoAPI.getAll>>, localTodos): Todo[] {
+  function mapTodos(
+    rows: Awaited<ReturnType<typeof window.todoAPI.getAll>>,
+    localTodos: Record<string, LocalTodo>
+  ): Todo[] {
     const localTodoIds = Object.keys(localTodos)
 
     return rows
@@ -35,6 +40,7 @@
           description: todo.description,
           completed: todo.completed,
           createdAt: todo.created_at,
+          secret: todo.secret,
           updatedAt: todo.updated_at,
           deletedAt: todo.deleted_at ?? undefined,
           completeUntil: todo.complete_until ?? undefined,
@@ -58,6 +64,7 @@
   }
 
   async function loadTodos(): Promise<void> {
+    await saveLocalTodos(todos)
     todos = mapTodos(await window.todoAPI.getAll(), await window.localTodoStorageAPI.getAll())
   }
 
@@ -67,6 +74,7 @@
   }
 
   async function onUpdateTodo(id: string, data: Partial<Todo>): Promise<void> {
+    await saveLocalTodos(todos)
     todos = mapTodos(
       await window.todoAPI.update(id, data),
       await window.localTodoStorageAPI.getAll()
@@ -106,6 +114,11 @@
   })
 
   onMount(() => {
+    window.windowAPI.onWindowClose(async () => {
+      await saveLocalTodos(todos)
+      window.windowAPI.readyToClose()
+    })
+
     settingsUpdateUnsubscribe = onSettingsUpdate((s) => {
       refreshBgTransparency(s)
       refreshBorderTransparency(s)
@@ -114,92 +127,56 @@
     return window.todoAPI.subscribe(() => void loadTodos())
   })
 
-  async function todoPin(): Promise<void> {
-    selectedTodo.pinned = true
-    const todo = await window.localTodoStorageAPI.get(selectedTodo.id)
-    await window.localTodoStorageAPI.set(
-      createTodo({
-        ...(todo ?? []),
-        id: selectedTodo.id,
-        pinned: true
+  async function saveLocalTodos(todos: Todo[]): Promise<void> {
+    await Promise.all(
+      todos.map(async (todo) => {
+        await window.localTodoStorageAPI.set(localTodoFromTodo({ ...todo }))
       })
     )
+  }
+
+  async function todoPin(): Promise<void> {
+    selectedTodo.pinned = true
     refreshSort()
   }
 
   async function todoUnpin(): Promise<void> {
     selectedTodo.pinned = false
-    const todo = await window.localTodoStorageAPI.get(selectedTodo.id)
-    await window.localTodoStorageAPI.set(
-      createTodo({
-        ...(todo ?? []),
-        id: selectedTodo.id,
-        pinned: false
-      })
-    )
     refreshSort()
   }
 
-  const transparencies = {
-    100: '',
-    90: 'bg-black/10',
-    80: 'bg-black/20',
-    70: 'bg-black/30',
-    60: 'bg-black/40',
-    50: 'bg-black/50',
-    40: 'bg-black/60',
-    30: 'bg-black/70',
-    20: 'bg-black/80',
-    10: 'bg-black/90',
-    0: 'bg-black'
-  }
-
-  const borderTransparencies = {
-    100: '',
-    90: 'border-black/10',
-    80: 'border-black/20',
-    70: 'border-black/30',
-    60: 'border-black/40',
-    50: 'border-black/50',
-    40: 'border-black/60',
-    30: 'border-black/70',
-    20: 'border-black/80',
-    10: 'border-black/90',
-    0: 'border-black'
-  }
-
   function refreshBgTransparency(s: Settings): void {
-    bgTransparency = transparencies[s.bgTransparency]
+    bgTransparency = bgTransparencies[s.bgTransparency]
   }
 
   function refreshBorderTransparency(s: Settings): void {
     borderTransparency = borderTransparencies[s.bgTransparency]
   }
 
-  let bgTransparency: string = $state(transparencies[globals.settings.bgTransparency])
-  let borderTransparency: string = $state(borderTransparencies[globals.settings.bgTransparency]);
+  function refreshBgHeaderTransparency(s: Settings): void {
+    bgHeaderTransparency = bgHeaderTransparencies[s.bgTransparency]
+  }
+
+  let bgTransparency: string = $state(bgTransparencies[globals.settings.bgTransparency])
+  let borderTransparency: string = $state(borderTransparencies[globals.settings.bgTransparency])
+  let bgHeaderTransparency: string = $state(bgHeaderTransparencies[globals.settings.bgTransparency])
   async function handleItemChange(detail: LayoutChangeDetail): Promise<void> {
     const todo = todos.find((x) => x.id === detail.item.id)
 
     if (!todo) return
 
-    await window.localTodoStorageAPI.set({
-      ...todo,
-      pinned: todo.pinned,
-      alwaysOpen: todo.alwaysOpen,
-      position: { x: detail.item.x, y: detail.item.y },
-      size: { width: detail.item.w, height: detail.item.h }
-    })
+    todo.position = { x: detail.item.x, y: detail.item.y }
+    todo.size = { width: detail.item.w, height: detail.item.h }
   }
 </script>
 
 <ContextMenu bind:openContextMenu data={currentContextMenuData} />
 
 <main
-  class="w-full h-full max-h-full flex flex-col gap-3 {bgTransparency} border {borderTransparency} py-1 px-2 border-b
-   duration-250 transition-colors border-accent/50 rounded-md"
+  class="w-full h-full max-h-full flex flex-col gap-3 {bgTransparency} px-2 md:px-0 md:border-1 {borderTransparency}
+   duration-250 transition-colors rounded-md"
 >
-  <TodoHeader {todos} onSync={syncTodos} />
+  <TodoHeader {todos} onSync={syncTodos} {bgHeaderTransparency} />
   <div
     class="max-h-full overflow-auto h-full flex flex-col gap-3 no-scrollbar md:hidden"
     oncontextmenu={showContextMenu}
@@ -210,8 +187,8 @@
   </div>
 
   <!-- svelte-ignore a11y_no_static_element_interactions -->
-  <div class="hidden md:block w-full h-full" oncontextmenu={showContextMenu}>
-    <Grid cols={10} rows={15} collision="push" itemSize={{ height: 50 }}>
+  <div class="hidden md:block w-full h-full px-3" oncontextmenu={showContextMenu}>
+    <Grid cols={25} rows={15} collision="push" itemSize={{ height: 50 }}>
       {#each todos as todo (todo.id)}
         <GridItem
           activeClass="opacity-30 scale-[1.02] shadow-lg"
@@ -244,25 +221,3 @@
     </button>
   </div>
 </main>
-
-<style>
-  .drag {
-    -webkit-app-region: drag;
-    app-region: drag;
-  }
-
-  .no-drag {
-    -webkit-app-region: no-drag;
-    app-region: no-drag;
-  }
-
-  button {
-    -webkit-app-region: no-drag;
-    app-region: no-drag;
-  }
-
-  .text {
-    -webkit-app-region: no-drag;
-    app-region: no-drag;
-  }
-</style>

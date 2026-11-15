@@ -1,10 +1,10 @@
 import { ElectronAPI } from '@electron-toolkit/preload'
-import { LocalTodoStorageAPI } from "./LocalTodoAPI";
-import { TodoAPI } from "./TodoAPI";
-import { TodoModalAPI } from "./TodoModalAPI";
-import { SettingsAPI } from "./SettingsAPI";
-import { DevToolsAPI } from "./devToolsAPI";
-import { WindowAPI } from "./windowAPI";
+import { LocalTodoStorageAPI } from './API/LocalTodoAPI'
+import { TodoAPI } from './API/TodoAPI'
+import { TodoModalAPI } from './API/TodoModalAPI'
+import { SettingsAPI } from './API/SettingsAPI'
+import { DevToolsAPI } from './API/DevToolsAPI'
+import { WindowAPI } from './API/WindowAPI'
 
 interface TodoPayload {
   id: string
@@ -37,9 +37,9 @@ declare global {
   interface Window {
     electron: ElectronAPI
     localTodoStorageAPI: LocalTodoStorageAPI
+    windowAPI: WindowAPI
     todoAPI: TodoAPI
     todoModalAPI: TodoModalAPI
-    windowAPI: WindowAPI
     settingsAPI: SettingsAPI
     devToolsAPI: DevToolsAPI
     widget: {

@@ -2,7 +2,9 @@
   import { onMount } from 'svelte'
   import Input from '../Input.svelte'
   import Select from '../Select.svelte'
-  import { type TodoType, TodoTypes } from '../../typescript/Todo'
+  import { type TodoType, TodoTypes } from '@app-types/Todo'
+  import { KeyRound } from "@lucide/svelte";
+  import Checkbox from "../Checkbox.svelte";
 
   let todoId = $state('')
   let isProcess = $state(false)
@@ -10,6 +12,7 @@
   let description = $state('')
   let completeUntil = $state('')
   let type: TodoType = $state('neutral')
+  let secret: boolean = $state(false)
 
   onMount(async () => {
     const { todoId: id } = await window.todoModalAPI.getData()
@@ -20,6 +23,7 @@
     title = todo.title
     description = todo.description
     completeUntil = todo.complete_until ?? ''
+    secret = todo.secret
     type = todo.type as TodoType
   })
 
@@ -30,6 +34,7 @@
     await window.todoAPI.update(todoId, {
       title: title.trim(),
       description: description.trim(),
+      secret,
       completeUntil,
       type
     })
@@ -80,12 +85,14 @@
       />
     </div>
 
+    <div>
+      <Checkbox label="Secret" icon={KeyRound} id="secret" bind:value={secret} />
+    </div>
+
     <div class="flex justify-end gap-3 pt-2">
       <button class="btn btn-sm btn-primary" disabled={isProcess}>Save</button>
-      <button
-        class="btn btn-sm btn-ghost"
-        type="button"
-        onclick={() => window.todoModalAPI.close()}>Cancel</button
+      <button class="btn btn-sm btn-ghost" type="button" onclick={() => window.todoModalAPI.close()}
+        >Cancel</button
       >
     </div>
   </form>

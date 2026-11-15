@@ -1,24 +1,34 @@
 <script lang="ts">
   import Input from '../Input.svelte'
   import Select from '../Select.svelte'
-  import { createTodo, type TodoType, TodoTypes } from '../../typescript/Todo'
+  import { type TodoType, createTodo, TodoTypes } from '@app-types/Todo'
+  import { localTodoFromTodo } from '@app-types/LocalTodo'
+  import Checkbox from "../Checkbox.svelte";
+  import { KeyRound } from "@lucide/svelte";
 
   let isProcess = $state(false)
   let title = $state('')
   let description = $state('')
   let completeUntil = $state('')
   let type: TodoType = $state('neutral')
+  let secret: boolean = $state(false);
 
   async function addTodo(): Promise<void> {
     if (!title.trim() || new Date(completeUntil) < new Date() || isProcess) return
 
     isProcess = true
 
-    let todo = createTodo({ title: title.trim(), description: description.trim(), type, completeUntil });
+    let todo = createTodo({
+      title: title.trim(),
+      description: description.trim(),
+      type,
+      secret,
+      completeUntil
+    })
 
     await window.todoAPI.create(todo)
 
-    await window.localTodoStorageAPI.set(todo)
+    await window.localTodoStorageAPI.set(localTodoFromTodo(todo))
 
     await window.todoModalAPI.close()
   }
@@ -66,12 +76,14 @@
       />
     </div>
 
+    <div>
+      <Checkbox label="Secret" icon={KeyRound} id="secret" bind:value={secret} />
+    </div>
+
     <div class="flex justify-end gap-3 pt-2">
       <button class="btn btn-sm btn-primary" disabled={isProcess}>Add</button>
-      <button
-        class="btn btn-sm btn-ghost"
-        type="button"
-        onclick={() => window.todoModalAPI.close()}>Cancel</button
+      <button class="btn btn-sm btn-ghost" type="button" onclick={() => window.todoModalAPI.close()}
+        >Cancel</button
       >
     </div>
   </form>

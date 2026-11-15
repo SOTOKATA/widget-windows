@@ -1,10 +1,11 @@
 ﻿import { ipcRenderer } from 'electron'
+import { Settings } from '@app-types/Settings'
 
 export interface SettingsAPI {
   onUpdated: (callback: () => void) => void
   open: () => Promise<void>
-  get: () => Promise<unknown>
-  save: (settings: unknown) => Promise<void>
+  get: () => Promise<Settings>
+  save: (settings: Settings) => Promise<void>
 }
 
 export const settingsAPI: SettingsAPI = {
@@ -13,5 +14,5 @@ export const settingsAPI: SettingsAPI = {
   },
   open: () => ipcRenderer.invoke('settings:open'),
   get: () => ipcRenderer.invoke('settings:get'),
-  save: (settings: unknown) => ipcRenderer.invoke('settings:save', settings)
+  save: (settings) => ipcRenderer.invoke('settings:save', settings)
 }

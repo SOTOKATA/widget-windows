@@ -1,32 +1,31 @@
 ﻿<script lang="ts">
-  import type { Todo } from "../typescript/Todo";
-  import { Plus, RefreshCw } from '@lucide/svelte'
+  import { RefreshCw } from '@lucide/svelte'
+  import type { Todo } from '@app-types/Todo'
 
   interface Props {
-    todos: Todo[];
-    onSync: () => Promise<void>;
+    todos: Todo[]
+    bgHeaderTransparency: string
+    onSync: () => Promise<void>
   }
 
-  let {
-    todos,
-    onSync
-  }: Props = $props();
+  let { todos, onSync, bgHeaderTransparency }: Props = $props()
 
-  let isSync: boolean = $state(false);
-  async function syncTodos(): void {
-    isSync = true;
-    await onSync();
-    isSync = false;
+  let isSync: boolean = $state(false)
+  async function syncTodos(): Promise<void> {
+    isSync = true
+    await onSync()
+    isSync = false
   }
 </script>
 
-<section class="w-full flex flex-row gap-3 justify-between flex-wrap items-center drag">
-  <div class="flex flex-row gap-1 items-center">
+<section
+  class="w-full flex flex-row gap-3 md:px-3 py-1 justify-between flex-wrap items-center drag">
+  <div class="flex flex-row gap-3 items-center">
     <div class="font-bold text-lg">
       <a href="https://github.com/SOTOKATA" target="_blank" class="font-mono link">@sotok</a>
       Todos
     </div>
-    <div class="opacity-70">({todos.length})</div>
+    <div class="opacity-70 font-mono">({todos.length})</div>
   </div>
   <button
     class="btn btn-sm btn-ghost {isSync ? 'pointer-events-none' : 'btn-circle'}"
@@ -43,7 +42,7 @@
 </section>
 
 <div class="flex md:hidden">
-  <hr class="opacity-70 w-full">
+  <hr class="opacity-70 w-full" />
 </div>
 
 <style>

@@ -1,9 +1,9 @@
 ﻿<script lang="ts">
-  import type { Todo } from '../typescript/Todo'
   import { getDaysUntil } from '../typescript/adaptiveDate'
   import { Marked, type Tokens } from 'marked'
-  import ContentBreaker from './ContentBreaker.svelte'
-  import { Pin } from "@lucide/svelte";
+  import { Pin } from '@lucide/svelte'
+  import type { Todo } from '@app-types/Todo'
+  import { secretAreaExtension } from "../typescript/markedExtensions/secretAreaExtension";
 
   interface Props {
     todo: Todo
@@ -23,8 +23,7 @@
   }
 
   function bgClasses(): string {
-    if (todo.completed)
-      return 'bg-success/30 border border-success/40'
+    if (todo.completed) return 'bg-success/30 border border-success/40'
 
     if (todo.type === 'critical' || getDaysUntil(todo.completeUntil) === 'Today')
       return 'bg-error/30 border border-error/40'
@@ -45,7 +44,42 @@
     }
   })
 
+  customMarked.use({
+    extensions: [secretAreaExtension]
+  })
+
+  function handleSecretClick(event: MouseEvent): boolean {
+    const target = event.target as HTMLElement;
+    const secret = target.closest('[data-secret]') as HTMLElement | null;
+
+    if (!secret) return false;
+
+    secret.classList.toggle('blur-sm');
+    secret.classList.toggle('blur-none');
+
+    return true;
+  }
+
+  function toggleSecret(event: MouseEvent): void {
+    if (!todo.secret) {
+      handleSecretClick(event)
+      return
+    }
+
+    const target = event.target as HTMLElement
+    if (target.closest('a') && !secret) return
+    else event.preventDefault()
+
+    if (target.closest('[data-secret]') && !secret) {
+      handleSecretClick(event)
+      return;
+    }
+
+    secret = !secret
+  }
+
   let renderedDescription = $derived(todo.description ? customMarked.parse(todo.description) : '')
+  let secret: boolean = $derived(todo.secret)
 </script>
 
 <section
@@ -78,16 +112,19 @@
   </label>
 
   {#if todo.description}
-    <div class="flex flex-row gap-3 w-full items-center overflow-scroll no-scrollbar w-full h-full">
+    <!-- svelte-ignore a11y_click_events_have_key_events -->
+    <!-- svelte-ignore a11y_no_static_element_interactions -->
+    <div
+      class="flex flex-row gap-3 w-full items-center overflow-scroll no-scrollbar w-full h-full"
+      onclick={(e) => toggleSecret(e)}
+    >
       <input type="checkbox" readonly class="checkbox checkbox-sm checkbox-ghost invisible" />
-      <p class="markdown opacity-90 {completedTextClasses()} w-full h-full">
+      <p
+        class="markdown opacity-90 {completedTextClasses()} duration-200 transition-all w-full h-full
+              {todo.secret ? 'hover:cursor-pointer' : ''} {secret ? 'blur-xs' : ''}"
+      >
         {@html renderedDescription}
       </p>
-<!--      <ContentBreaker sizeY={150} bind:todo>-->
-<!--        <p class="markdown opacity-90 {completedTextClasses()}">-->
-<!--          {@html renderedDescription}-->
-<!--        </p>-->
-<!--      </ContentBreaker>-->
     </div>
   {/if}
 </section>

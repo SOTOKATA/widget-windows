@@ -1,6 +1,6 @@
 ﻿import { ipcMain } from 'electron'
 import Store from 'electron-store'
-import { Todo } from '../database/todos'
+import { LocalTodo } from '@app-types/LocalTodo'
 
 const store = new Store({
   defaults: {
@@ -8,26 +8,29 @@ const store = new Store({
   }
 })
 
-ipcMain.handle('local-todo-api:get-settings', (_) => {
+ipcMain.handle('local-todo-api:get-settings', (_): LocalTodo[] | undefined => {
   try {
-    return store.get('todo-local-settings')
+    return store.get('todo-local-settings') as LocalTodo[]
   } catch (e) {
     console.error('local-todo-api:get-settings.error', e)
   }
+
+  return undefined
 })
 
-ipcMain.handle('local-todo-api:get-setting', (_, todoId: string) => {
+ipcMain.handle('local-todo-api:get-setting', (_, todoId: string): LocalTodo | undefined => {
   try {
-    return store.get(`todo-local-settings.${todoId}`)
+    return store.get(`todo-local-settings.${todoId}`) as LocalTodo
   } catch (e) {
     console.error('local-todo-api:get-setting.error', e)
   }
+
+  return undefined
 })
 
-ipcMain.handle('local-todo-api:set-setting', (event, todo: Todo) => {
+ipcMain.handle('local-todo-api:set-setting', (event, todo: LocalTodo) => {
   try {
     return store.set(`todo-local-settings.${todo.id}`, {
-      alwaysOpen: todo.alwaysOpen,
       pinned: todo.pinned,
       position: todo.position,
       size: todo.size

@@ -1,6 +1,7 @@
 import { BrowserWindow, ipcMain } from 'electron'
 import { syncTodos } from './sync'
-import { create, getAll, initializeTodosTable, remove, update, type Todo } from './todos'
+import { create, getAll, initializeTodosTable, remove, update } from './todos'
+import { Todo } from '@app-types/Todo'
 
 export async function initializeTursoDatabase(): Promise<void> {
   initializeIPC()

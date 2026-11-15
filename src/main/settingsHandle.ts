@@ -1,18 +1,12 @@
-import { app, BrowserWindow, ipcMain, screen } from 'electron'
+import { app, BrowserWindow, ipcMain } from 'electron'
 import fs from 'node:fs'
 import path from 'node:path'
-
-export interface Settings {
-  autoLaunch: boolean
-  bgTransparency: number
-}
+import { Settings } from '@app-types/Settings'
 
 const defaultSettings: Settings = {
   autoLaunch: false,
   bgTransparency: 90
 }
-
-const margin = 5
 
 function settingsPath(): string {
   return path.join(app.getPath('userData'), 'settings.json')
@@ -37,13 +31,8 @@ export function getSettings(): Settings {
   return defaultSettings
 }
 
-export function applySettings(window: BrowserWindow, settings = getSettings()): void {
+export function applySettings(window: BrowserWindow): void {
   window.webContents.send('settings:updated')
-  // const workArea = screen.getPrimaryDisplay().workArea
-  // const width = widths[settings.width]
-  // const height = settings.height === 'full' ? workArea.height : heights[settings.height]
-  // const x = settings.position === 'left' ? workArea.x + margin : workArea.x + workArea.width - width - margin
-  // window.setBounds({ x, y: workArea.y + margin, width, height: Math.min(height, workArea.height - margin * 2) })
 }
 
 function applyAutoLaunch(enabled: boolean): void {
@@ -63,7 +52,7 @@ export function initializeSettingsHandle(getWidgetWindow: () => BrowserWindow | 
       fs.writeFileSync(settingsPath(), JSON.stringify(candidate, null, 2), 'utf8')
       applyAutoLaunch(candidate.autoLaunch)
       const window = getWidgetWindow()
-      if (window && !window.isDestroyed()) applySettings(window, candidate)
+      if (window && !window.isDestroyed()) applySettings(window)
       return true
     } catch (error) {
       console.error('Unable to save settings:', error)

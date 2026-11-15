@@ -1,4 +1,4 @@
-import { app, shell, BrowserWindow, ipcMain, screen } from 'electron'
+import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
@@ -38,7 +38,21 @@ function createWindow(): BrowserWindow {
 
   applyWindowMetrics(mainWindow)
 
-  mainWindow.on('close', () => saveWindowMetrics(mainWindow))
+  let readyToClose: boolean = false
+  mainWindow.on('close', (event) => {
+    if (!readyToClose) event.preventDefault()
+
+    saveWindowMetrics(mainWindow)
+    mainWindow.webContents.send('window-close')
+  })
+
+  ipcMain.on('ready-to-close', () => {
+    readyToClose = true
+    if (process.platform !== 'darwin') {
+      app.quit()
+    }
+  })
+
 
   // For keyboard inputs
   ipcMain.on('widget:focusable', (_, value) => {
@@ -57,24 +71,11 @@ function createWindow(): BrowserWindow {
     return { action: 'deny' }
   })
 
-  screen.on('display-metrics-changed', () => {
-    sendScreenInfo(mainWindow)
-  })
-
   if (is.dev && process.env['ELECTRON_RENDERER_URL'])
     mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
   else mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
 
   return mainWindow
-}
-
-function sendScreenInfo(window: BrowserWindow): void {
-  const primaryDisplay = screen.getPrimaryDisplay();
-
-  const workArea = primaryDisplay.workArea; // { x, y, width, height }
-  const bounds = primaryDisplay.bounds; // Full screen size
-
-  window.webContents.send('screen-info-updated', { workArea, bounds });
 }
 
 function readyToShow(window: BrowserWindow): void {

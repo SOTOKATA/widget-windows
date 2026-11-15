@@ -1,5 +1,4 @@
-﻿// globals.svelte.ts
-import type { Settings } from './Settings'
+﻿import type { Settings } from '@app-types/Settings'
 
 interface GlobalsSvelte {
   settings: Settings
