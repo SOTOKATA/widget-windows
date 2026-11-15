@@ -53,6 +53,7 @@
     }
   },
   "dependencies": {
+    "@appulsauce/svelte-grid": "^2.2.0",
     "@electron-toolkit/preload": "^3.0.2",
     "@electron-toolkit/utils": "^4.0.0",
     "@lucide/svelte": "^1.70.0",

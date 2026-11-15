@@ -9,6 +9,7 @@ import { applySettings, initializeSettingsHandle } from './settingsHandle'
 import { pinToDesktop } from './pin'
 import { initializeTodoModalWindow } from './todoModalWindow'
 import './LocalTodoAPI'
+import { applyWindowMetrics, saveWindowMetrics } from './windowAPI'
 
 let mainWindow: BrowserWindow | null = null
 
@@ -34,6 +35,10 @@ function createWindow(): BrowserWindow {
       sandbox: false
     }
   })
+
+  applyWindowMetrics(mainWindow)
+
+  mainWindow.on('close', () => saveWindowMetrics(mainWindow))
 
   // For keyboard inputs
   ipcMain.on('widget:focusable', (_, value) => {

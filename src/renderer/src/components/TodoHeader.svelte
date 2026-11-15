@@ -42,7 +42,9 @@
   </button>
 </section>
 
-<hr class="opacity-70">
+<div class="flex md:hidden">
+  <hr class="opacity-70 w-full">
+</div>
 
 <style>
   .drag {

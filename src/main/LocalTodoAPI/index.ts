@@ -28,7 +28,9 @@ ipcMain.handle('local-todo-api:set-setting', (event, todo: Todo) => {
   try {
     return store.set(`todo-local-settings.${todo.id}`, {
       alwaysOpen: todo.alwaysOpen,
-      pinned: todo.pinned
+      pinned: todo.pinned,
+      position: todo.position,
+      size: todo.size
     })
   } catch (e) {
     console.error('local-todo-api:set-setting.error', e)

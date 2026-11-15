@@ -5,6 +5,7 @@
     "": {
       "name": "widget-windows",
       "dependencies": {
+        "@appulsauce/svelte-grid": "^2.2.0",
         "@electron-toolkit/preload": "^3.0.2",
         "@electron-toolkit/utils": "^4.0.0",
         "@lucide/svelte": "^1.70.0",
@@ -42,6 +43,8 @@
     },
   },
   "packages": {
+    "@appulsauce/svelte-grid": ["@appulsauce/svelte-grid@2.2.0", "", { "peerDependencies": { "svelte": "^5.15.0" } }, "sha512-diLhaZJRj9AxiUP1Qi/q+9ax5VGu4DD6c9Dy3a03Iywx/GAKqnLBohTHq5z0bFIpfb3e4C0quekTjX8jg2O6ew=="],
+
     "@ark/schema": ["@ark/schema@0.56.8", "", { "dependencies": { "@ark/util": "0.56.8" } }, "sha512-R05TOe85oQBGFFw2zKMuZpqkXibLKuC/aJt6VwFn5Cjc4x3NkWfhvGRpRDycNkj3ddcHnOPtIsmjVowJO9Yxdw=="],
 
     "@ark/util": ["@ark/util@0.56.8", "", {}, "sha512-XLiQyGfpJcws1zCtp2Cva8s1oheCdFn1Rt6JSyC4NnkDrpwCJnlaiawuuOc1Z97vMH+jEzW5vyyf0xOju5wUQA=="],

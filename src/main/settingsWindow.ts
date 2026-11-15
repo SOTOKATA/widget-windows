@@ -12,7 +12,7 @@ export function openSettingsWindow(): void {
 
   settingsWindow = new BrowserWindow({
     width: 360,
-    height: 460,
+    height: 260,
     resizable: false,
     title: 'Todo Widget Settings',
     webPreferences: {

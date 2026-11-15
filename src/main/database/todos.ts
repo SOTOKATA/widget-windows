@@ -24,6 +24,8 @@ export interface Todo {
   deletedAt?: string
   alwaysOpen?: boolean
   pinned?: boolean
+  position?: { x: number; y: number }
+  size?: { width: number; height: number }
 }
 
 export type TodoType = 'neutral' | 'important'

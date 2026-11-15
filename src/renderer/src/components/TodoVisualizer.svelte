@@ -49,7 +49,7 @@
 </script>
 
 <section
-  class="flex flex-col {bgClasses()} duration-250 transition-colors px-3 py-2 rounded-md max-h-[330px]"
+  class="flex flex-col {bgClasses()} duration-250 transition-colors px-3 py-2 rounded-md w-full h-full"
   data-menu-type
   data-id={todo.id}
 >
@@ -64,7 +64,7 @@
       <span class="font-semibold cursor-pointer {completedTextClasses()}">{todo.title}</span>
     </div>
 
-    <div class="flex flex-row gap-3 items-center">
+    <div class="flex flex-row gap-3 items-center pe-4">
       {#if todo.completeUntil}
         <span class="badge-sm bg-black/20 px-2 py-0.5 rounded-md">
           {getDaysUntil(todo.completeUntil)}
@@ -78,13 +78,16 @@
   </label>
 
   {#if todo.description}
-    <div class="flex flex-row gap-3 w-full items-center">
+    <div class="flex flex-row gap-3 w-full items-center overflow-scroll no-scrollbar w-full h-full">
       <input type="checkbox" readonly class="checkbox checkbox-sm checkbox-ghost invisible" />
-      <ContentBreaker sizeY={150} bind:todo>
-        <p class="markdown opacity-90 {completedTextClasses()}">
-          {@html renderedDescription}
-        </p>
-      </ContentBreaker>
+      <p class="markdown opacity-90 {completedTextClasses()} w-full h-full">
+        {@html renderedDescription}
+      </p>
+<!--      <ContentBreaker sizeY={150} bind:todo>-->
+<!--        <p class="markdown opacity-90 {completedTextClasses()}">-->
+<!--          {@html renderedDescription}-->
+<!--        </p>-->
+<!--      </ContentBreaker>-->
     </div>
   {/if}
 </section>

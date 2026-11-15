@@ -4,6 +4,7 @@ import { TodoAPI } from "./TodoAPI";
 import { TodoModalAPI } from "./TodoModalAPI";
 import { SettingsAPI } from "./SettingsAPI";
 import { DevToolsAPI } from "./devToolsAPI";
+import { WindowAPI } from "./windowAPI";
 
 interface TodoPayload {
   id: string
@@ -38,6 +39,7 @@ declare global {
     localTodoStorageAPI: LocalTodoStorageAPI
     todoAPI: TodoAPI
     todoModalAPI: TodoModalAPI
+    windowAPI: WindowAPI
     settingsAPI: SettingsAPI
     devToolsAPI: DevToolsAPI
     widget: {

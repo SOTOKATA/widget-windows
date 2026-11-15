@@ -5,6 +5,7 @@ import { todoModalAPI } from './TodoModalAPI'
 import { todoAPI } from './TodoAPI'
 import { settingsAPI } from './SettingsAPI'
 import { devToolsAPI } from './devToolsAPI'
+import { windowAPI } from './windowAPI'
 
 if (process.contextIsolated) {
   try {
@@ -13,6 +14,7 @@ if (process.contextIsolated) {
     contextBridge.exposeInMainWorld('todoModalAPI', todoModalAPI)
     contextBridge.exposeInMainWorld('settingsAPI', settingsAPI)
     contextBridge.exposeInMainWorld('devToolsAPI', devToolsAPI)
+    contextBridge.exposeInMainWorld('windowAPI', windowAPI)
   } catch (error) {
     console.error('Failed to expose APIs:', error)
   }

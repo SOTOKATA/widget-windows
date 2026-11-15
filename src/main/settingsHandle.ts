@@ -2,9 +2,6 @@ import { app, BrowserWindow, ipcMain, screen } from 'electron'
 import fs from 'node:fs'
 import path from 'node:path'
 
-export type HeightPreset = 'small' | 'medium' | 'full'
-export type WidthPreset = 'small' | 'normal' | 'large'
-
 export interface Settings {
   autoLaunch: boolean
   bgTransparency: number
@@ -12,7 +9,7 @@ export interface Settings {
 
 const defaultSettings: Settings = {
   autoLaunch: false,
-  bgTransparency: 90,
+  bgTransparency: 90
 }
 
 const margin = 5
