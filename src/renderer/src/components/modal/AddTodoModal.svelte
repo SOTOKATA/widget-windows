@@ -49,7 +49,7 @@
   >
     <h1 class="text-lg font-bold">Add Todo</h1>
     <div>
-      <Input label="Title" id="title" type="text" bind:value={title} noWidget placeholder="Product list" />
+      <Input label="Title" id="title" type="text" bind:value={title} placeholder="Product list" />
     </div>
     <Input
       label="Description"
@@ -57,7 +57,6 @@
       type="textarea"
       placeholder={placeholderDescription}
       bind:value={description}
-      noWidget
       class="resize-none! min-h-0 flex-1 flex flex-col [&>textarea]:h-full [&>textarea]:flex-1 code whitespace-pre overflow-x-auto"
     />
     <div>
@@ -67,7 +66,6 @@
         type="datetime-local"
         min={new Date().toISOString()}
         bind:value={completeUntil}
-        noWidget
       />
     </div>
 

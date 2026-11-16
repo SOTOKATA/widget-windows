@@ -1,6 +1,7 @@
 ﻿<script lang="ts">
-  import { Marked, type Tokens } from "marked";
   import { secretAreaExtension } from '../typescript/markedExtensions/secretAreaExtension'
+  import { createCustomMarked } from "../typescript/markedExtensions/custromMarked";
+  import { globals } from '../typescript/globals.svelte'
 
   interface Props {
     content: string
@@ -8,17 +9,7 @@
 
   let { content }: Props = $props()
 
-  const customMarked = new Marked({
-    async: false,
-    renderer: {
-      link({ href, title, tokens }: Tokens.Link) {
-        const text = this.parser.parseInline(tokens)
-        const titleAttr = title ? ` title="${title}"` : ''
-
-        return `<a href="${href}"${titleAttr} class="link" target="_blank" rel="noopener noreferrer">${text}</a>`
-      }
-    }
-  })
+  const customMarked = createCustomMarked(globals.settings.markdownSettings)
 
   customMarked.use({
     extensions: [secretAreaExtension]

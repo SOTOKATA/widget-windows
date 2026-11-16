@@ -22,7 +22,7 @@ export function openSettingsWindow(): void {
     frame: false,
     autoHideMenuBar: true,
     title: 'Todo Widget Settings',
-    ...(process.platform === 'linux' ? { icon } : {}),
+    icon,
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false

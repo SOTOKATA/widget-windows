@@ -2,10 +2,12 @@ import { app, BrowserWindow, ipcMain } from 'electron'
 import fs from 'node:fs'
 import path from 'node:path'
 import { Settings } from '@app-types/Settings'
+import { createMarkdownSettings } from '@app-types/MarkdownSettings'
 
 const defaultSettings: Settings = {
   autoLaunch: false,
-  bgTransparency: 90
+  bgTransparency: 90,
+  markdownSettings: createMarkdownSettings()
 }
 
 function settingsPath(): string {
@@ -15,7 +17,8 @@ function settingsPath(): string {
 function isSettings(value: Partial<Settings>): value is Settings {
   return (
     typeof value.autoLaunch === 'boolean' &&
-    [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100].includes(value.bgTransparency ?? -10)
+    [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100].includes(value.bgTransparency ?? -10) &&
+    value.markdownSettings != undefined
   )
 }
 

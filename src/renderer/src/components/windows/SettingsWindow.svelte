@@ -4,6 +4,8 @@
   import type { Settings } from '@app-types/Settings'
   import { onMount } from 'svelte'
   import { refreshSettings } from '../../typescript/globals.svelte'
+  import MarkdownSettings from "./SettingsWindowChildren/MarkdownSettings.svelte";
+  import { createMarkdownSettings } from "@app-types/MarkdownSettings";
 
   const tabs = [
     { label: 'App Settings', value: 'app' },
@@ -14,13 +16,16 @@
 
   const defaults: Settings = {
     autoLaunch: false,
-    bgTransparency: 90
+    bgTransparency: 90,
+    markdownSettings: createMarkdownSettings()
   }
   let settings = $state<Settings>(defaults)
   let status = $state('')
 
   onMount(async () => {
     settings = await window.settingsAPI.get()
+
+    if (!settings.markdownSettings) settings.markdownSettings = defaults.markdownSettings
   })
 
   async function saveSettings(): Promise<void> {
@@ -28,7 +33,8 @@
     try {
       const saved = await window.settingsAPI.save({
         autoLaunch: settings.autoLaunch,
-        bgTransparency: settings.bgTransparency
+        bgTransparency: settings.bgTransparency,
+        markdownSettings: createMarkdownSettings(settings.markdownSettings)
       })
 
       if (saved) {
@@ -74,6 +80,7 @@
       {#if selectedTab === 'app'}
         <AppSettings bind:settings />
       {:else if selectedTab === 'markdown'}
+        <MarkdownSettings bind:settings />
       {/if}
     </div>
 

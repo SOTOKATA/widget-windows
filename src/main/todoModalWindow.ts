@@ -1,6 +1,7 @@
 import { BrowserWindow, ipcMain } from 'electron'
 import { join } from 'node:path'
 import { is } from '@electron-toolkit/utils'
+import icon from '../../resources/icon.png?asset'
 
 export type TodoModalType = 'add' | 'change' | 'delete'
 
@@ -23,6 +24,7 @@ export function openTodoModal(type: TodoModalType, todoId?: string): void {
     minWidth: type === 'delete' ? 400 : 300,
     minHeight: type === 'delete' ? 200 : 580,
     resizable: true,
+    icon,
     title: type === 'add' ? 'Add Todo' : type === 'change' ? 'Change Todo' : 'Delete Todo',
     autoHideMenuBar: true,
     webPreferences: {

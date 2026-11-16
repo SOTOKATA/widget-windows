@@ -3,6 +3,46 @@
   themes: dark --default, light;
 }
 
+@source inline("text-{xs,sm,base,lg,xl,2xl,3xl,4xl,5xl}");
+@source inline("font-{thin,extralight,light,normal,medium,semibold,bold,extrabold,black}");
+@source inline("italic not-italic underline line-through no-underline uppercase lowercase capitalize normal-case");
+@source inline("leading-{none,tight,snug,normal,relaxed,loose}");
+@source inline("tracking-{tighter,tight,normal,wide,wider,widest}");
+@source inline("text-{left,center,right,justify,wrap,nowrap,balance,pretty}");
+
+@source inline("text-primary text-secondary text-accent text-neutral text-info text-success text-warning text-error");
+@source inline("text-primary-content text-secondary-content text-accent-content text-neutral-content text-base-content");
+@source inline("bg-base-100 bg-base-200 bg-base-300 bg-primary bg-secondary bg-accent bg-neutral bg-info bg-success bg-warning bg-error");
+@source inline("opacity-100 opacity-90 opacity-80 opacity-75 opacity-70 opacity-60 opacity-50 opacity-40 opacity-30 opacity-20 opacity-10");
+
+@source inline("m-{0,1,2,3,4,5,6,8}");
+@source inline("mt-{0,0.5,1,1.5,2,3,4,6,8}");
+@source inline("mb-{0,0.5,1,1.5,2,3,4,6,8}");
+@source inline("my-{1,2,3,4,6}");
+@source inline("ms-{1,2,3,4,5,6}");
+@source inline("me-{1,2,3,4,5,6}");
+@source inline("p-{0,1,2,3,4,5,6}");
+@source inline("px-{2,3,4}");
+@source inline("py-{1,2,3}");
+@source inline("ps-{2,2.5,3,4}");
+@source inline("pe-{2,4}");
+@source inline("pl-{4,6}");
+@source inline("pr-4");
+
+@source inline("border-{0,2,4}");
+@source inline("border-{t,b,s,s-2,s-4,l,l-2,l-4}");
+@source inline("border-base-{200,300,100}");
+@source inline("border-{primary,secondary,accent,neutral,info,success,warning,error}");
+@source inline("rounded-{none,sm,md,lg,xl,2xl,full}");
+
+@source inline("list-{none,disc,decimal,inside,outside}");
+@source inline("space-y-{0.5,1,1.5,2,3}");
+
+@source inline("table-{zebra,pin-rows,pin-cols,xs,sm,md,lg}");
+@source inline("{w-full,table-auto,table-fixed,border-collapse,border-separate}");
+
+@source inline("badge-{xs,sm,md,lg,primary,secondary,accent,ghost,outline}");
+
 html, body, #app {
   background: transparent;
   height: 100%;
@@ -25,12 +65,12 @@ html, body, #app {
 }
 
 .markdown { line-height: 1.4 }
-.markdown ul { @apply list-disc }
-.markdown ol { @apply list-decimal }
-.markdown li { @apply list-disc ms-5 }
-.markdown table { @apply table table-sm }
-.markdown h1 { @apply text-2xl font-bold mt-1 mb-2 }
-.markdown h2 { @apply text-xl font-semibold mt-1 mb-2 }
-.markdown h3 { @apply text-lg font-semibold mt-1 mb-2 }
-.markdown h4 { @apply text-balance font-medium mt-1 mb-2 }
-.markdown blockquote { @apply border-s border-s-2 rounded-sm ps-2.5 mt-1 mb-2}
+/*.markdown ul { @apply list-disc }*/
+/*.markdown ol { @apply list-decimal }*/
+/*.markdown li { @apply list-disc ms-5 }*/
+/*.markdown table { @apply table table-sm }*/
+/*.markdown h1 { @apply text-2xl font-bold mt-1 mb-2 }*/
+/*.markdown h2 { @apply text-xl font-semibold mt-1 mb-2 }*/
+/*.markdown h3 { @apply text-lg font-semibold mt-1 mb-2 }*/
+/*.markdown h4 { @apply text-balance font-medium mt-1 mb-2 }*/
+/*.markdown blockquote { @apply border-s border-s-2 rounded-sm ps-2.5 mt-1 mb-2}*/

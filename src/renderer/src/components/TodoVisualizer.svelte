@@ -1,10 +1,11 @@
 ﻿<script lang="ts">
   import { getDaysUntil } from '../typescript/adaptiveDate'
-  import { Marked, type Tokens } from 'marked'
   import { Pin, LockKeyhole } from '@lucide/svelte'
   import type { Todo } from '@app-types/Todo'
-  import { secretAreaExtension } from "../typescript/markedExtensions/secretAreaExtension";
-  import { globals } from "../typescript/globals.svelte";
+  import { secretAreaExtension } from '../typescript/markedExtensions/secretAreaExtension'
+  import { globals, onSettingsUpdate } from '../typescript/globals.svelte'
+  import { createCustomMarked } from '../typescript/markedExtensions/custromMarked'
+  import { onDestroy, onMount } from 'svelte'
 
   interface Props {
     todo: Todo
@@ -33,32 +34,33 @@
     else return 'bg-accent/20 border border-accent/30'
   }
 
-  const customMarked = new Marked({
-    async: false,
-    renderer: {
-      link({ href, title, tokens }: Tokens.Link) {
-        const text = this.parser.parseInline(tokens)
-        const titleAttr = title ? ` title="${title}"` : ''
-
-        return `<a href="${href}"${titleAttr} class="link" target="_blank" rel="noopener noreferrer">${text}</a>`
-      }
-    }
+  let unsubscribeSettingsUpdate: (() => void) | undefined = $state()
+  onMount(() => {
+    unsubscribeSettingsUpdate = onSettingsUpdate(
+      (s) => (customMarked = createCustomMarked(s.markdownSettings))
+    )
   })
+
+  onDestroy(() => {
+    unsubscribeSettingsUpdate?.()
+  })
+
+  let customMarked = $state(createCustomMarked(globals.settings.markdownSettings))
 
   customMarked.use({
     extensions: [secretAreaExtension]
   })
 
   function handleSecretClick(event: MouseEvent): boolean {
-    const target = event.target as HTMLElement;
-    const secret = target.closest('[data-secret]') as HTMLElement | null;
+    const target = event.target as HTMLElement
+    const secret = target.closest('[data-secret]') as HTMLElement | null
 
-    if (!secret) return false;
+    if (!secret) return false
 
-    secret.classList.toggle('blur-xs');
-    secret.classList.toggle('blur-none');
+    secret.classList.toggle('blur-xs')
+    secret.classList.toggle('blur-none')
 
-    return true;
+    return true
   }
 
   function toggleSecret(event: MouseEvent): void {
@@ -73,7 +75,7 @@
 
     if (target.closest('[data-secret]') && !secret) {
       handleSecretClick(event)
-      return;
+      return
     }
 
     secret = !secret
@@ -120,9 +122,9 @@
       onclick={(e) => toggleSecret(e)}
     >
       {#if secret}
-          <span class="absolute flex flex-col w-full h-full items-center justify-center opacity-70">
-            <LockKeyhole size={16} />
-          </span>
+        <span class="absolute flex flex-col w-full h-full items-center justify-center opacity-70">
+          <LockKeyhole size={16} />
+        </span>
       {/if}
       <input type="checkbox" readonly class="checkbox checkbox-sm checkbox-ghost invisible" />
       <p
