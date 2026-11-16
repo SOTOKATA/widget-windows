@@ -3,5 +3,6 @@
 export interface Settings {
   autoLaunch: boolean
   bgTransparency: number
+  removeBorder: boolean
   markdownSettings: MarkdownSettings
 }

@@ -5,7 +5,7 @@ export interface SettingsAPI {
   onUpdated: (callback: () => void) => void
   open: () => Promise<void>
   get: () => Promise<Settings>
-  save: (settings: Settings) => Promise<void>
+  save: (settings: Settings) => Promise<boolean>
 }
 
 export const settingsAPI: SettingsAPI = {

@@ -1,19 +1,18 @@
 ﻿<script lang="ts">
-  import { secretAreaExtension } from '../typescript/markedExtensions/secretAreaExtension'
   import { createCustomMarked } from "../typescript/markedExtensions/custromMarked";
   import { globals } from '../typescript/globals.svelte'
+  import type { MarkdownSettings } from "@app-types/MarkdownSettings";
 
   interface Props {
     content: string
+    customMarkdownPreferences: MarkdownSettings
   }
 
-  let { content }: Props = $props()
+  let { content, customMarkdownPreferences }: Props = $props()
 
-  const customMarked = createCustomMarked(globals.settings.markdownSettings)
-
-  customMarked.use({
-    extensions: [secretAreaExtension]
-  })
+  const customMarked = $derived(
+    createCustomMarked(customMarkdownPreferences ?? globals.settings.markdownSettings)
+  )
 
   function handleSecretClick(event: MouseEvent): boolean {
     const target = event.target as HTMLElement

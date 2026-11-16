@@ -45,8 +45,8 @@ export function createMarkdownSettings(data?: MarkdownSettingsArgs): MarkdownSet
 
     p: data?.p ?? '',
 
-    ul: data?.ul ?? '',
-    ol: data?.ol ?? '',
-    li: data?.li ?? ''
+    ul: data?.ul ?? 'list-disc',
+    ol: data?.ol ?? 'list-decimal',
+    li: data?.li ?? 'list-disc ms-5'
   }
 }

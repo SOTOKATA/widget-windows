@@ -16,7 +16,7 @@
   import { type LocalTodo, localTodoFromTodo } from '@app-types/LocalTodo'
   import type { Todo } from '@app-types/Todo'
   import type { Settings } from '@app-types/Settings'
-  import { borderTransparencies, bgTransparencies } from "./todoWindowUtils";
+  import { borderTransparencies, bgTransparencies } from './todoWindowUtils'
 
   let todos: Todo[] = $state([])
   let selectedTodoId = $state('')
@@ -150,11 +150,16 @@
   }
 
   function refreshBorderTransparency(s: Settings): void {
-    borderTransparency = borderTransparencies[s.bgTransparency]
+    if (s.removeBorder) return;
+
+    borderTransparency = `rounded-md border ${borderTransparencies[s.bgTransparency]}`
   }
 
   let bgTransparency: string = $state(bgTransparencies[globals.settings.bgTransparency])
-  let borderTransparency: string = $state(borderTransparencies[globals.settings.bgTransparency])
+  let borderTransparency: string = $state()
+
+  refreshBorderTransparency(globals.settings)
+
   async function handleItemChange(detail: LayoutChangeDetail): Promise<void> {
     const todo = todos.find((x) => x.id === detail.item.id)
 
@@ -168,8 +173,8 @@
 <ContextMenu bind:openContextMenu data={currentContextMenuData} />
 
 <main
-  class="w-full h-full max-h-full flex flex-col gap-3 {bgTransparency} px-2 md:px-0 md:border-1 {borderTransparency}
-   duration-250 transition-colors rounded-md"
+  class="w-full h-full max-h-full flex flex-col gap-3 {bgTransparency} px-2 md:px-0 {borderTransparency}
+   duration-250 transition-colors"
 >
   <TodoHeader {todos} onSync={syncTodos} />
   <div

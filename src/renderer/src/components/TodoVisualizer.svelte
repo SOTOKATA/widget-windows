@@ -47,10 +47,6 @@
 
   let customMarked = $state(createCustomMarked(globals.settings.markdownSettings))
 
-  customMarked.use({
-    extensions: [secretAreaExtension]
-  })
-
   function handleSecretClick(event: MouseEvent): boolean {
     const target = event.target as HTMLElement
     const secret = target.closest('[data-secret]') as HTMLElement | null

@@ -17,7 +17,8 @@
   const defaults: Settings = {
     autoLaunch: false,
     bgTransparency: 90,
-    markdownSettings: createMarkdownSettings()
+    markdownSettings: createMarkdownSettings(),
+    removeBorder: false
   }
   let settings = $state<Settings>(defaults)
   let status = $state('')
@@ -34,7 +35,8 @@
       const saved = await window.settingsAPI.save({
         autoLaunch: settings.autoLaunch,
         bgTransparency: settings.bgTransparency,
-        markdownSettings: createMarkdownSettings(settings.markdownSettings)
+        markdownSettings: createMarkdownSettings(settings.markdownSettings),
+        removeBorder: settings.removeBorder
       })
 
       if (saved) {

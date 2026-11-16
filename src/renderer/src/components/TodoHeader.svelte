@@ -26,8 +26,6 @@
     </div>
   </div>
 
-  <div class="opacity-70 font-mono">({todos.length})</div>
-
   <div class="flex flex-row gap-3 items-center">
     <button
       class="btn btn-xs btn-neutral opacity-70 font-mono"

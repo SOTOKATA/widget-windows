@@ -1,15 +1,13 @@
 ﻿<script lang="ts">
   import Checkbox from '../../Checkbox.svelte'
-  import { Play } from '@lucide/svelte'
-  import type { Settings } from "@app-types/Settings";
+  import { Play, Square } from "@lucide/svelte";
+  import type { Settings } from '@app-types/Settings'
 
   interface Props {
     settings: Settings
   }
 
-  let {
-    settings = $bindable()
-  }: Props = $props()
+  let { settings = $bindable() }: Props = $props()
 
   const transparencies = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
 </script>
@@ -18,12 +16,19 @@
   <div class="flex flex-col gap-3 justify-between flex-1">
     <div class="flex flex-row justify-center">
       <div class="h-full flex flex-col gap-3 w-md">
-        <div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <Checkbox
             icon={Play}
             id="auto-launch"
             label="Start with Windows"
             bind:value={settings.autoLaunch}
+          />
+
+          <Checkbox
+            icon={Square}
+            id="remove-border"
+            label="Remove Border"
+            bind:value={settings.removeBorder}
           />
         </div>
 
