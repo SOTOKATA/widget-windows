@@ -39,7 +39,7 @@
 - Eggs (12)`
 </script>
 
-<main class="min-h-screen max-h-screen bg-base-200 p-5 h-full md:grid md:grid-cols-2 md:gap-3">
+<main class="min-h-screen max-h-screen bg-base-100 p-5 h-full md:grid md:grid-cols-2 md:gap-3">
   <form
     class="flex flex-col gap-3 h-full"
     onsubmit={(event) => {
@@ -94,13 +94,17 @@
     </div>
   </form>
 
-  <div class="md:block hidden overflow-auto relative">
-    <div class="absolute right-5 top-0.5 text-sm">
-      <div class="badge badge-xs badge-neutral rounded-xl">Description Preview</div>
+  <div class="mockup-window bg-base-200 md:flex hidden">
+    <div class="absolute top-3 right-4">
+      <div class="badge badge-sm badge-primary rounded-md">
+        Description Preview
+      </div>
     </div>
 
-    <MarkdownRenderer
-      content={description.trim().length === 0 ? placeholderDescription : description}
-    />
+    <div class="overflow-auto flex-1 min-h-0 h-full px-3">
+      <MarkdownRenderer
+        content={description.trim().length === 0 ? placeholderDescription : description}
+      />
+    </div>
   </div>
 </main>

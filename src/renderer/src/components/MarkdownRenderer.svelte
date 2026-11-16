@@ -1,5 +1,5 @@
 ﻿<script lang="ts">
-  import { Marked, type Tokens } from 'marked'
+  import { Marked, type Tokens } from "marked";
   import { secretAreaExtension } from '../typescript/markedExtensions/secretAreaExtension'
 
   interface Props {
@@ -48,7 +48,7 @@
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
-  class="flex flex-row gap-3 w-full bg-base-100 p-3 rounded-xl items-center overflow-scroll w-full h-full"
+  class="flex flex-row gap-3 w-full px-3 rounded-xl items-center"
   onclick={(e) => onMarkdownContentClick(e)}
 >
   <p class="markdown opacity-90 duration-200 transition-all w-full h-full">

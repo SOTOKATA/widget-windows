@@ -1,82 +1,63 @@
 ﻿<script lang="ts">
-  import { onMount } from 'svelte'
-  import type { Settings } from '@app-types/Settings'
-  import { refreshSettings } from '../../../typescript/globals.svelte'
-  import Select from '../../Select.svelte'
-  import Checkbox from "../../Checkbox.svelte";
-  import { Play } from "@lucide/svelte";
+  import Checkbox from '../../Checkbox.svelte'
+  import { Play } from '@lucide/svelte'
+  import type { Settings } from "@app-types/Settings";
 
-  const defaults: Settings = {
-    autoLaunch: false,
-    bgTransparency: 90
+  interface Props {
+    settings: Settings
   }
-  let settings = $state<Settings>(defaults)
-  let status = $state('')
 
-  const transparencies = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+  let {
+    settings = $bindable()
+  }: Props = $props()
 
-  onMount(async () => {
-    settings = await window.settingsAPI.get()
-  })
-
-  async function saveSettings(): Promise<void> {
-    status = ''
-    try {
-      const saved = await window.settingsAPI.save({
-        autoLaunch: settings.autoLaunch,
-        bgTransparency: settings.bgTransparency
-      })
-
-      if (saved) {
-        await refreshSettings()
-        window.close()
-      }
-
-      status = saved ? 'Settings applied.' : 'Unable to save settings.'
-    } catch (error) {
-      console.error('Unable to save settings:', error)
-      status = 'Unable to save settings.'
-    }
-  }
+  const transparencies = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
 </script>
 
-<main class="w-full h-full">
-  <form
-    class="flex flex-col gap-3"
-    onsubmit={(event) => {
-      event.preventDefault()
-      saveSettings()
-    }}
-  >
-    <Checkbox
-      icon={Play}
-      id="auto-launch"
-      label="Start with Windows"
-      bind:value={settings.autoLaunch}
-    />
+<div class="w-full flex-1 flex flex-col">
+  <div class="flex flex-col gap-3 justify-between flex-1">
+    <div class="flex flex-row justify-center">
+      <div class="h-full flex flex-col gap-3 w-md">
+        <div>
+          <Checkbox
+            icon={Play}
+            id="auto-launch"
+            label="Start with Windows"
+            bind:value={settings.autoLaunch}
+          />
+        </div>
 
-    <Select
-      label="Background Transparency"
-      id="bg-transparency"
-      bind:value={settings.bgTransparency}
-      collection={transparencies}
-      getValue={(p) => p}
-      getLabel={(p) => `${p}%`}
-    />
-
-    {#if status}<p
-        class="text-sm"
-        class:text-success={status === 'Settings applied.'}
-        class:text-error={status !== 'Settings applied.'}
-      >
-        {status}
-      </p>{/if}
-    <div class="flex justify-end gap-2">
-      <button class="btn btn-sm btn-primary" type="submit">Save</button><button
-        class="btn btn-sm btn-ghost"
-        type="button"
-        onclick={() => window.close()}>Close</button
-      >
+        <div class="flex flex-col gap-1">
+          <label class="label text-sm">Transparency</label>
+          <div>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              class="range range-xs range-primary w-full"
+              step="10"
+              bind:value={settings.bgTransparency}
+            />
+            <div class="flex justify-between mt-1 px-0.5 text-xs">
+              {#each transparencies as transparency}
+                <span
+                  class="
+                  {transparency === 0
+                    ? 'text-left'
+                    : transparency === 100
+                      ? 'text-right'
+                      : 'text-center'}
+                  {transparency === settings.bgTransparency ? 'text-primary' : ''}
+                  duration-300 transition-colors
+                  "
+                >
+                  {transparency}%
+                </span>
+              {/each}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  </form>
-</main>
+  </div>
+</div>

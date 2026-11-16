@@ -1,6 +1,7 @@
 import { BrowserWindow, ipcMain } from 'electron'
 import { join } from 'node:path'
 import { is } from '@electron-toolkit/utils'
+import icon from '../../resources/icon.png?asset'
 
 let settingsWindow: BrowserWindow | null = null
 
@@ -11,10 +12,17 @@ export function openSettingsWindow(): void {
   }
 
   settingsWindow = new BrowserWindow({
+    minWidth: 460,
+    minHeight: 260,
     width: 760,
     height: 460,
-    resizable: false,
+    thickFrame: true,
+    resizable: true,
+    transparent: true,
+    frame: false,
+    autoHideMenuBar: true,
     title: 'Todo Widget Settings',
+    ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false
