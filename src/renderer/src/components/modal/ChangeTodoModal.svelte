@@ -3,10 +3,12 @@
   import Input from '../Input.svelte'
   import Select from '../Select.svelte'
   import { type TodoType, TodoTypes } from '@app-types/Todo'
-  import { KeyRound } from "@lucide/svelte";
-  import Checkbox from "../Checkbox.svelte";
-  import MarkdownRenderer from "../MarkdownRenderer.svelte";
-  import WindowMockup from "../windows/WindowMockup.svelte";
+  import { KeyRound } from '@lucide/svelte'
+  import Checkbox from '../Checkbox.svelte'
+  import MarkdownRenderer from '../MarkdownRenderer.svelte'
+  import WindowMockup from '../windows/WindowMockup.svelte'
+  import { todoColors } from '../../typescript/todoColors'
+  import ButtonSelect from '../ButtonSelect.svelte'
 
   let todoId = $state('')
   let isProcess = $state(false)
@@ -49,7 +51,21 @@
 
   const placeholderDescription: string = `- Milk 1L
 - Bread
-- Eggs (12)`;
+- Eggs (12)`
+
+  function relativeTypeButtonClass(itemType): string {
+    if (type !== itemType) return ''
+
+    function getColors(itemType: string): string | undefined {
+      if (itemType === 'neutral') return todoColors.normal
+      else if (itemType === 'important') return todoColors.important
+      else if (itemType === 'critical') return todoColors.critical
+      else return undefined
+    }
+
+    const colors = getColors(itemType)
+    return colors ? `${colors} shadow-none` : ''
+  }
 </script>
 
 <WindowMockup title="Change {originalTitle}" classHeader="bg-base-100!" classContent="bg-base-100!">
@@ -57,9 +73,9 @@
     <form
       class="flex flex-col gap-3 h-full"
       onsubmit={(event) => {
-      event.preventDefault()
-      void changeTodo()
-    }}
+        event.preventDefault()
+        void changeTodo()
+      }}
     >
       <div>
         <Input label="Title" id="title" type="text" bind:value={title} />
@@ -82,12 +98,12 @@
       </div>
 
       <div>
-        <Select
+        <ButtonSelect
           label="Type"
-          id="type"
           collection={TodoTypes}
           getValue={(item) => item.value}
           getLabel={(item) => item.label}
+          getButtonClass={(item) => relativeTypeButtonClass(item.value)}
           bind:value={type}
         />
       </div>
@@ -98,23 +114,21 @@
 
       <div class="flex justify-end gap-3 pt-2">
         <button class="btn btn-sm btn-primary" disabled={isProcess}>Save</button>
-        <button class="btn btn-sm btn-ghost" type="button" onclick={() => window.todoModalAPI.close()}
-        >Cancel</button
+        <button
+          class="btn btn-sm btn-ghost"
+          type="button"
+          onclick={() => window.todoModalAPI.close()}>Cancel</button
         >
       </div>
     </form>
 
     <div class="mockup-window bg-base-200 md:flex hidden">
       <div class="absolute top-3 right-4">
-        <div class="badge badge-sm badge-primary rounded-md">
-          Description Preview
-        </div>
+        <div class="badge badge-sm badge-primary rounded-md">Description Preview</div>
       </div>
 
       <div class="overflow-auto flex-1 min-h-0 h-full px-3">
-        <MarkdownRenderer
-          content={description}
-        />
+        <MarkdownRenderer content={description} />
       </div>
     </div>
   </div>

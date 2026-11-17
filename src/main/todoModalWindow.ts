@@ -20,9 +20,9 @@ export function openTodoModal(type: TodoModalType, todoId?: string): void {
 
   const window = new BrowserWindow({
     width: type === 'delete' ? 400 : 1000,
-    height: type === 'delete' ? 200 : 680,
+    height: type === 'delete' ? 170 : 680,
     minWidth: type === 'delete' ? 400 : 300,
-    minHeight: type === 'delete' ? 200 : 580,
+    minHeight: type === 'delete' ? 170 : 580,
     icon,
     thickFrame: true,
     resizable: true,

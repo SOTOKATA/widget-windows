@@ -6,6 +6,7 @@
   import { globals, onSettingsUpdate } from '../typescript/globals.svelte'
   import { createCustomMarked } from '../typescript/markedExtensions/custromMarked'
   import { onDestroy, onMount } from 'svelte'
+  import { todoColors } from "../typescript/todoColors";
 
   interface Props {
     todo: Todo
@@ -28,10 +29,10 @@
     if (todo.completed) return 'bg-success/30 border border-success/40'
 
     if (todo.type === 'critical' || getDaysUntil(todo.completeUntil) === 'Today')
-      return 'bg-error/30 border border-error/40'
+      return todoColors.critical
     else if (todo.type === 'important' || getDaysUntil(todo.completeUntil) === 'Tomorrow')
-      return 'bg-warning/30 border border-warning/40'
-    else return 'bg-accent/20 border border-accent/30'
+      return todoColors.important
+    else return todoColors.normal
   }
 
   let unsubscribeSettingsUpdate: (() => void) | undefined = $state()
