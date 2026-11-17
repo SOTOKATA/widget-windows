@@ -23,10 +23,13 @@ export function openTodoModal(type: TodoModalType, todoId?: string): void {
     height: type === 'delete' ? 200 : 680,
     minWidth: type === 'delete' ? 400 : 300,
     minHeight: type === 'delete' ? 200 : 580,
-    resizable: true,
     icon,
-    title: type === 'add' ? 'Add Todo' : type === 'change' ? 'Change Todo' : 'Delete Todo',
+    thickFrame: true,
+    resizable: true,
+    transparent: true,
+    frame: false,
     autoHideMenuBar: true,
+    title: type === 'add' ? 'Add Todo' : type === 'change' ? 'Change Todo' : 'Delete Todo',
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false

@@ -4,6 +4,7 @@
   import AddTodoModal from './components/modal/AddTodoModal.svelte'
   import ChangeTodoModal from './components/modal/ChangeTodoModal.svelte'
   import DeleteTodoModal from './components/modal/DeleteTodoModal.svelte'
+  import WindowMockup from "./components/windows/WindowMockup.svelte";
 
   let currentRoute = $state(window.location.hash);
 

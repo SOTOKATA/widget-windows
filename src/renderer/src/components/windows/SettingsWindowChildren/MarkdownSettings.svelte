@@ -1,7 +1,12 @@
 ﻿<script lang="ts">
   import type { Settings } from '@app-types/Settings'
-  import MarkdownSettingItem from "./MarkdownSettingItem.svelte";
-  import tab from "daisyui/components/tab";
+  import MarkdownSettingItem from './MarkdownSettingItem.svelte'
+  import {
+    headingData,
+    listData,
+    otherData,
+    type MarkdownSettingItemData
+  } from './markdownSettingsData'
 
   interface Props {
     settings: Settings
@@ -9,35 +14,21 @@
 
   let { settings = $bindable() }: Props = $props()
 
-  const headingContent = `# Header 1
-## Header 2
-### Header 3
-#### Header 4
-##### Header 5
-###### Header 6`
-
-  const list = `1. Ordered item
-2. Ordered item
-
-- Unordered item
-- Unordered item`
-
-  const other = `> Blockquote example
-
-| Place      | Time  | Number of people |
-| ---------- | ----- | ---------------- |
-| Restaurant | 14:00 | 3                |
-| Park       | 16:00 | 4                |
-
-Paragraph example.`
-
   const tabs = [
     { label: 'Headers', value: 'header' },
     { label: 'List', value: 'list' },
     { label: 'Other', value: 'other' }
   ]
 
-  let selectedTab: string = $state(tabs[0].value);
+  let selectedTab: string = $state(tabs[0].value)
+
+  function getCurrentData(): MarkdownSettingItemData | undefined {
+    if (selectedTab === 'header') return headingData
+    else if (selectedTab === 'list') return listData
+    else if (selectedTab === 'other') return otherData
+
+    return undefined
+  }
 </script>
 
 <div class="w-full flex-1 flex flex-col gap-3">
@@ -50,7 +41,9 @@ Paragraph example.`
     <div class="flex flex-row">
       {#each tabs as tab (tab.value)}
         <button
-          class="btn btn-sm rounded-b-none border-none {selectedTab === tab.value ? 'btn-primary' : 'bg-base-100'}"
+          class="btn btn-sm rounded-b-none border-none {selectedTab === tab.value
+            ? 'btn-primary'
+            : 'bg-base-100'}"
           onclick={() => (selectedTab = tab.value)}
         >
           {tab.label}
@@ -58,26 +51,14 @@ Paragraph example.`
       {/each}
     </div>
 
-    <hr class="text-primary opacity-70">
+    <hr class="text-primary opacity-70" />
   </div>
 
-  {#if selectedTab === 'header'}
+  {#if selectedTab}
     <MarkdownSettingItem
       bind:settings
-      range={['h1', 'h2', 'h3', 'h4', 'h5', 'h6']}
-      markdownPreview={headingContent}
-    />
-  {:else if selectedTab === 'list'}
-    <MarkdownSettingItem
-      bind:settings
-      range={['ol', 'ul', 'li']}
-      markdownPreview={list}
-    />
-  {:else if selectedTab === 'other'}
-    <MarkdownSettingItem
-      bind:settings
-      range={['blockquote', 'table', 'p']}
-      markdownPreview={other}
+      range={getCurrentData().range}
+      markdownPreview={getCurrentData().markdownPreview}
     />
   {/if}
 </div>
