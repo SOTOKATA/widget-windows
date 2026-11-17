@@ -150,7 +150,10 @@
   }
 
   function refreshBorderTransparency(s: Settings): void {
-    if (s.removeBorder) return;
+    if (s.removeBorder) {
+      borderTransparency = '';
+      return;
+    }
 
     borderTransparency = `rounded-md border ${borderTransparencies[s.bgTransparency]}`
   }

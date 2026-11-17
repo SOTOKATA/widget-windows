@@ -41,12 +41,12 @@ export function createMarkdownSettings(data?: MarkdownSettingsArgs): MarkdownSet
 
     table: data?.table ?? 'table table-sm',
 
-    blockquote: data?.blockquote ?? 'border-s border-s-2 rounded-sm ps-2.5 mt-1 mb-2',
+    blockquote: data?.blockquote ?? 'border-s-2 rounded-sm ps-2.5 mt-1 mb-2',
 
     p: data?.p ?? '',
 
     ul: data?.ul ?? 'list-disc',
     ol: data?.ol ?? 'list-decimal',
-    li: data?.li ?? 'list-disc ms-5'
+    li: data?.li ?? 'ms-5'
   }
 }
