@@ -5,7 +5,7 @@
     "composite": true,
     "types": ["electron-vite/node"],
     "paths": {
-      "@app-types/*": ["src/types/*"]
+      "@app-types/*": ["./src/types/*"]
     }
   }
 }

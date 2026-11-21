@@ -5,13 +5,11 @@
   while (i < src.length) {
     const char = src[i]
 
-    // Пропускаем экранированные символы: \( \) \\
     if (char === '\\') {
       i += 2
       continue
     }
 
-    // Пропускаем inline code с любым количеством backticks
     if (char === '`') {
       let ticks = 1
 

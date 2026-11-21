@@ -168,7 +168,7 @@
           }
         }),
         syntaxHighlighting(markdownHighlight),
-        keymap.of(indentWithTab),
+        keymap.of([indentWithTab]),
         EditorView.domEventHandlers({
           focus: () => {
             focused = true

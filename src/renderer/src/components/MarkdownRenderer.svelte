@@ -32,7 +32,7 @@
     if (target.closest('[data-secret]')) handleSecretClick(event)
   }
 
-  let renderedContent = $derived(content ? customMarked.parse(content) : '')
+  let renderedContent = $derived(content ? DOMPurify.sanitize(customMarked.parse(content)) : '')
 </script>
 
 <!-- svelte-ignore a11y_click_events_have_key_events -->
@@ -42,6 +42,6 @@
   onclick={(e) => onMarkdownContentClick(e)}
 >
   <p class="markdown opacity-90 duration-200 transition-all w-full h-full">
-    {@html DOMPurify.sanitize(renderedContent)}
+    {@html renderedContent}
   </p>
 </div>

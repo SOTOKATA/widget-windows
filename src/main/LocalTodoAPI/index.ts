@@ -28,7 +28,7 @@ ipcMain.handle('local-todo-api:get-setting', (_, todoId: string): LocalTodo | un
   return undefined
 })
 
-ipcMain.handle('local-todo-api:set-setting', (event, todo: LocalTodo) => {
+ipcMain.handle('local-todo-api:set-setting', (_event, todo: LocalTodo) => {
   try {
     return store.set(`todo-local-settings.${todo.id}`, {
       pinned: todo.pinned,
@@ -40,11 +40,13 @@ ipcMain.handle('local-todo-api:set-setting', (event, todo: LocalTodo) => {
   }
 })
 
-ipcMain.handle('local-todo-api:delete-setting', (event, todoId: string) => {
+ipcMain.handle('local-todo-api:delete-setting', (_event, todoId: string) => {
   try {
+    // @ts-ignore store.delete with this call exists
     store.delete(`todo-local-settings.${todoId}`)
     return true
   } catch (e) {
     console.error('local-todo-api:delete-setting.error', e)
+    return false
   }
 })

@@ -1,6 +1,6 @@
 ﻿import { ipcRenderer } from 'electron'
-import { DatabaseTodo } from '@app-types/DatabaseTodo'
-import { Todo } from '@app-types/Todo'
+import type { DatabaseTodo } from '@app-types/DatabaseTodo'
+import type { Todo } from '@app-types/Todo'
 
 export interface DatabaseAPI {
   sync: () => Promise<void>
@@ -10,7 +10,7 @@ export interface DatabaseAPI {
 interface TodoAPI {
   getAll: () => Promise<DatabaseTodo[]>
   create: (todo: Todo) => Promise<void>
-  update: (id: string, todo: Todo) => Promise<DatabaseTodo[]>
+  update: (id: string, todo: Partial<Todo>) => Promise<DatabaseTodo[]>
   remove: (id: string) => Promise<void>
   subscribe: (callback: () => void) => () => void
 }

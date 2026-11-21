@@ -4,7 +4,6 @@
   import AddTodoModal from './components/modal/AddTodoModal.svelte'
   import ChangeTodoModal from './components/modal/ChangeTodoModal.svelte'
   import DeleteTodoModal from './components/modal/DeleteTodoModal.svelte'
-  import MarkdownEditor from "./components/MarkdownEditor.svelte";
 
   let currentRoute = $state(window.location.hash)
 

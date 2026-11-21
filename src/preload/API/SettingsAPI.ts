@@ -1,5 +1,5 @@
 ﻿import { ipcRenderer } from 'electron'
-import { Settings } from '@app-types/Settings'
+import type { Settings } from '@app-types/Settings'
 
 export interface SettingsAPI {
   onUpdated: (callback: () => void) => void

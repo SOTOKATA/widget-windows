@@ -1,6 +1,6 @@
 ﻿import { app } from 'electron'
-import { autoUpdater } from 'electron-builder'
 import log from 'electron-log'
+import { autoUpdater } from 'electron-updater'
 
 autoUpdater.logger = log
 log.transports.file.level = 'info'

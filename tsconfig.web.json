@@ -17,7 +17,7 @@
     "checkJs": true,
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "paths": {
-      "@app-types/*": ["src/types/*"]
+      "@app-types/*": ["./src/types/*"]
     }
   }
 }

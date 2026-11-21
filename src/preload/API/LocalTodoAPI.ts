@@ -1,5 +1,5 @@
 ﻿import { ipcRenderer } from 'electron'
-import { LocalTodo } from '@app-types/LocalTodo'
+import type { LocalTodo } from '@app-types/LocalTodo'
 
 export interface LocalTodoStorageAPI {
   set: (todo: LocalTodo) => Promise<void>

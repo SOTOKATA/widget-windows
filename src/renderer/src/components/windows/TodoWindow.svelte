@@ -96,7 +96,11 @@
       currentContextMenuData = {
         items: [
           ...TodoListContextMenu,
-          ...(selectedTodo.pinned ? TodoItemUnpinContextMenu : TodoItemPinContextMenu),
+          ...(!fullScreen
+            ? selectedTodo.pinned
+              ? TodoItemUnpinContextMenu
+              : TodoItemPinContextMenu
+            : []),
           ...TodoItemContextMenu
         ],
         data: {
@@ -174,6 +178,24 @@
     todo.position = { x: detail.item.x, y: detail.item.y }
     todo.size = { width: detail.item.w, height: detail.item.h }
   }
+
+  let fullScreen = $state(false);
+
+  onMount(() => {
+    const mediaQuery = window.matchMedia('(min-width: 768px)');
+
+    const updateMatch = (e) => {
+      fullScreen = e.matches;
+    };
+
+    fullScreen = mediaQuery.matches;
+
+    mediaQuery.addEventListener('change', updateMatch);
+
+    return () => {
+      mediaQuery.removeEventListener('change', updateMatch);
+    };
+  });
 </script>
 
 <ContextMenu bind:openContextMenu data={currentContextMenuData} />
