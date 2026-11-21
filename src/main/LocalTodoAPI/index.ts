@@ -30,11 +30,7 @@ ipcMain.handle('local-todo-api:get-setting', (_, todoId: string): LocalTodo | un
 
 ipcMain.handle('local-todo-api:set-setting', (_event, todo: LocalTodo) => {
   try {
-    return store.set(`todo-local-settings.${todo.id}`, {
-      pinned: todo.pinned,
-      position: todo.position,
-      size: todo.size
-    })
+    return store.set(`todo-local-settings.${todo.id}`, todo)
   } catch (e) {
     console.error('local-todo-api:set-setting.error', e)
   }

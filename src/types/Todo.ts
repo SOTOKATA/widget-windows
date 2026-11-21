@@ -12,25 +12,11 @@
   pinned?: boolean
   position?: { x: number; y: number }
   size?: { width: number; height: number }
+  openedSize?: { width: number; height: number }
+  closed?: boolean
 }
 
 export type TodoType = 'neutral' | 'important' | 'critical' | 'accent'
-
-export interface TodoDataArgs {
-  id?: string
-  title?: string
-  type?: TodoType
-  completeUntil?: string
-  description?: string
-  completed?: boolean
-  createdAt?: string
-  updatedAt?: string
-  deletedAt?: string
-  secret?: boolean
-  pinned?: boolean
-  position?: { x: number; y: number }
-  size?: { width: number; height: number }
-}
 
 export const TodoTypes: { label: string; value: TodoType }[] = [
   { label: 'Neutral', value: 'neutral' },
@@ -39,20 +25,22 @@ export const TodoTypes: { label: string; value: TodoType }[] = [
   { label: 'Critical', value: 'critical' }
 ]
 
-export function createTodo(data: TodoDataArgs): Todo {
+export function createTodo(data?: Partial<Todo>): Todo {
   return {
-    id: data.id ?? crypto.randomUUID(),
-    title: data.title ?? 'title',
-    type: data.type ?? 'neutral',
-    completeUntil: data.completeUntil,
-    description: data.description,
-    completed: data.completed ?? false,
-    createdAt: data.createdAt ?? new Date().toISOString(),
-    updatedAt: data.updatedAt ?? new Date().toISOString(),
-    deletedAt: data.deletedAt,
-    pinned: data.pinned,
-    position: data.position ?? { x: 0, y: 0 },
-    secret: data.secret ?? false,
-    size: data.size ?? { width: 4, height: 2 },
+    id: data?.id ?? crypto.randomUUID(),
+    title: data?.title ?? 'title',
+    type: data?.type ?? 'neutral',
+    completeUntil: data?.completeUntil,
+    description: data?.description ?? '',
+    completed: data?.completed ?? false,
+    createdAt: data?.createdAt ?? new Date().toISOString(),
+    updatedAt: data?.updatedAt ?? new Date().toISOString(),
+    deletedAt: data?.deletedAt,
+    pinned: data?.pinned,
+    position: data?.position ?? { x: 0, y: 0 },
+    secret: data?.secret ?? false,
+    size: data?.size ?? { width: 4, height: 2 },
+    openedSize: data?.openedSize ?? { width: 4, height: 2 },
+    closed: data?.closed ?? false
   }
 }

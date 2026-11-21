@@ -8,11 +8,15 @@
   import WindowMockup from '../windows/WindowMockup.svelte'
   import ButtonSelect from '../ButtonSelect.svelte'
   import { relativeTypeButtonClass } from './utils'
-  import MarkdownEditor from "../MarkdownEditor.svelte";
+  import MarkdownEditor from '../MarkdownEditor.svelte'
+
+  const placeholderDescription: string = `- Milk 1L
+- Bread
+- Eggs (12)`
 
   let isProcess = $state(false)
   let title = $state('')
-  let description = $state('')
+  let description = $state(placeholderDescription)
   let completeUntil = $state('')
   let type: TodoType = $state('neutral')
   let secret: boolean = $state(false)
@@ -36,10 +40,6 @@
 
     await window.todoModalAPI.close()
   }
-
-  const placeholderDescription: string = `- Milk 1L
-- Bread
-- Eggs (12)`
 </script>
 
 <WindowMockup title="Add Todo" classHeader="bg-base-100!" classContent="bg-base-100!">
@@ -101,7 +101,7 @@
 
       <div class="overflow-auto flex-1 min-h-0 h-full px-3">
         <MarkdownRenderer
-          content={description.trim().length === 0 ? placeholderDescription : description}
+          content={description}
         />
       </div>
     </div>

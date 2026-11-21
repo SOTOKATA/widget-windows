@@ -84,6 +84,23 @@
     )
   }
 
+  async function onChangeVisibilityTodo(id: string, closed: boolean): Promise<void> {
+    const todo = todos.find((t) => t.id === id)
+
+    if (!todo) return
+
+    todo.closed = closed
+
+    if (todo.closed) {
+      todo.openedSize = todo.size
+      todo.size = { width: todo.size.width, height: 1 }
+    } else todo.size = todo.openedSize
+
+    await window.localTodoStorageAPI.set(localTodoFromTodo(todo))
+
+    todos = [...todos]
+  }
+
   function showContextMenu(event: MouseEvent): void {
     event.preventDefault()
     const element = (event.target as HTMLElement).closest<HTMLElement>('[data-menu-type]')
@@ -179,23 +196,23 @@
     todo.size = { width: detail.item.w, height: detail.item.h }
   }
 
-  let fullScreen = $state(false);
+  let fullScreen = $state(false)
 
   onMount(() => {
-    const mediaQuery = window.matchMedia('(min-width: 768px)');
+    const mediaQuery = window.matchMedia('(min-width: 768px)')
 
     const updateMatch = (e) => {
-      fullScreen = e.matches;
-    };
+      fullScreen = e.matches
+    }
 
-    fullScreen = mediaQuery.matches;
+    fullScreen = mediaQuery.matches
 
-    mediaQuery.addEventListener('change', updateMatch);
+    mediaQuery.addEventListener('change', updateMatch)
 
     return () => {
-      mediaQuery.removeEventListener('change', updateMatch);
-    };
-  });
+      mediaQuery.removeEventListener('change', updateMatch)
+    }
+  })
 </script>
 
 <ContextMenu bind:openContextMenu data={currentContextMenuData} />
@@ -222,6 +239,7 @@
           activeClass="opacity-30 scale-[1.02] shadow-lg"
           previewClass="bg-primary/20 border-2 border-dashed border-primary rounded-lg"
           class="relative"
+          resizable={!todo.closed}
           onchange={handleItemChange}
           id={todo.id}
           x={todo?.position?.x ?? 0}
@@ -234,7 +252,7 @@
               <GripVertical size={16} />
             </div>
           {/snippet}
-          <TodoVisualizer {todo} {onUpdateTodo} />
+          <TodoVisualizer {todo} {onUpdateTodo} {onChangeVisibilityTodo} />
         </GridItem>
       {/each}
     </Grid>
