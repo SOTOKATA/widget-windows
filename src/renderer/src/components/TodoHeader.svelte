@@ -22,7 +22,7 @@
   <div class="flex flex-row gap-3 items-center">
     <div class="font-bold text-lg">
       <a href="https://github.com/SOTOKATA" target="_blank" class="font-mono link">@sotok</a>
-      Todos
+      Todos <span class="opacity-50 text-xs">v{window.electron.appVersion}</span>
     </div>
   </div>
 

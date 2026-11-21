@@ -35,7 +35,7 @@ interface WidgetSettings {
 
 declare global {
   interface Window {
-    electron: ElectronAPI
+    electron: ElectronAPI & { appVersion: string }
     localTodoStorageAPI: LocalTodoStorageAPI
     windowAPI: WindowAPI
     databaseAPI: DatabaseAPI

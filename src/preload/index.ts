@@ -6,6 +6,7 @@ import { settingsAPI } from './API/SettingsAPI'
 import { devToolsAPI } from './API/DevToolsAPI'
 import { windowAPI } from './API/WindowAPI'
 import { databaseAPI } from './API/DatabaseAPI'
+import { version } from '../../package.json'
 
 if (process.contextIsolated) {
   try {
@@ -14,7 +15,10 @@ if (process.contextIsolated) {
     contextBridge.exposeInMainWorld('todoModalAPI', todoModalAPI)
     contextBridge.exposeInMainWorld('settingsAPI', settingsAPI)
     contextBridge.exposeInMainWorld('devToolsAPI', devToolsAPI)
-    contextBridge.exposeInMainWorld('electron', electronAPI)
+    contextBridge.exposeInMainWorld('electron', {
+      ...electronAPI,
+      appVersion: version
+    })
     contextBridge.exposeInMainWorld('windowAPI', windowAPI)
     contextBridge.exposeInMainWorld('widget', {
       setFocusable: (value: boolean) => ipcRenderer.send('widget:focusable', value)
