@@ -27,7 +27,7 @@
 <div class="flex flex-col gap-1 w-full">
   <label
     for={id}
-    class="flex flex-row gap-3 justify-between items-center w-full rounded-xl border px-3 py-2 cursor-pointer transition-colors
+    class="flex flex-row gap-3 justify-between items-center w-full rounded-lg border px-3 py-2 cursor-pointer transition-colors
             {value ? 'border-primary bg-primary/10 text-primary' : 'border-base-300 bg-base-200 text-base-content'}
             {disabled ? 'cursor-not-allowed opacity-60' : ''}"
   >

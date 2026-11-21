@@ -1,10 +1,10 @@
 import { ElectronAPI } from '@electron-toolkit/preload'
 import { LocalTodoStorageAPI } from './API/LocalTodoAPI'
-import { TodoAPI } from './API/TodoAPI'
 import { TodoModalAPI } from './API/TodoModalAPI'
 import { SettingsAPI } from './API/SettingsAPI'
 import { DevToolsAPI } from './API/DevToolsAPI'
 import { WindowAPI } from './API/WindowAPI'
+import { DatabaseAPI } from "./API/DatabaseAPI";
 
 interface TodoPayload {
   id: string
@@ -38,7 +38,7 @@ declare global {
     electron: ElectronAPI
     localTodoStorageAPI: LocalTodoStorageAPI
     windowAPI: WindowAPI
-    todoAPI: TodoAPI
+    databaseAPI: DatabaseAPI
     todoModalAPI: TodoModalAPI
     settingsAPI: SettingsAPI
     devToolsAPI: DevToolsAPI

@@ -1,15 +1,14 @@
 import { BrowserWindow, ipcMain } from 'electron'
-import { syncTodos } from './sync'
-import { create, getAll, initializeTodosTable, remove, update } from './todos'
+import { syncDatabase } from './sync'
+import { databaseTodoActions } from './todos'
 import { Todo } from '@app-types/Todo'
 
 export async function initializeTursoDatabase(): Promise<void> {
   initializeIPC()
-  await initializeTodosTable()
 
   if (process.env.TODO_TURSO_DATABASE_URL) {
     try {
-      await syncTodos()
+      await syncDatabase()
     } catch (error) {
       console.warn('Turso sync is unavailable. Working with the local database.', error)
     }
@@ -17,34 +16,34 @@ export async function initializeTursoDatabase(): Promise<void> {
 }
 
 function initializeIPC(): void {
-  ipcMain.handle('todos:sync', () => syncTodos())
-  ipcMain.handle('todos:getAll', () => getAll())
-  ipcMain.handle('todos:create', async (_, todo: Todo) => {
-    await create(todo)
+  ipcMain.handle('database:sync', () => syncDatabase())
+  ipcMain.handle('database:todos:getAll', () => databaseTodoActions.getAll())
+  ipcMain.handle('database:todos:create', async (_, todo: Todo) => {
+    await databaseTodoActions.create(todo)
     await syncAfterMutation()
     notifyTodosChanged()
-    return getAll()
+    return databaseTodoActions.getAll()
   })
-  ipcMain.handle('todos:update', async (_, id: string, todo: Partial<Todo>) => {
-    await update(id, todo)
+  ipcMain.handle('database:todos:update', async (_, id: string, todo: Partial<Todo>) => {
+    await databaseTodoActions.update(id, todo)
     await syncAfterMutation()
     notifyTodosChanged()
-    return getAll()
+    return databaseTodoActions.getAll()
   })
-  ipcMain.handle('todos:remove', async (_, id: string) => {
-    await remove(id)
+  ipcMain.handle('database:todos:remove', async (_, id: string) => {
+    await databaseTodoActions.remove(id)
     await syncAfterMutation()
     notifyTodosChanged()
-    return getAll()
+    return databaseTodoActions.getAll()
   })
 }
 
 function notifyTodosChanged(): void {
-  BrowserWindow.getAllWindows().forEach((window) => window.webContents.send('todos:changed'))
+  BrowserWindow.getAllWindows().forEach((window) => window.webContents.send('database:todos:changed'))
 }
 
 async function syncAfterMutation(): Promise<void> {
   if (!process.env.TODO_TURSO_DATABASE_URL) return
 
-  await syncTodos()
+  await syncDatabase()
 }

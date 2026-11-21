@@ -1,6 +1,5 @@
 <script lang="ts">
   import Input from '../Input.svelte'
-  import Select from '../Select.svelte'
   import { type TodoType, createTodo, TodoTypes } from '@app-types/Todo'
   import { localTodoFromTodo } from '@app-types/LocalTodo'
   import Checkbox from '../Checkbox.svelte'
@@ -8,7 +7,8 @@
   import MarkdownRenderer from '../MarkdownRenderer.svelte'
   import WindowMockup from '../windows/WindowMockup.svelte'
   import ButtonSelect from '../ButtonSelect.svelte'
-  import { todoColors } from '../../typescript/todoColors'
+  import { relativeTypeButtonClass } from './utils'
+  import MarkdownEditor from "../MarkdownEditor.svelte";
 
   let isProcess = $state(false)
   let title = $state('')
@@ -30,7 +30,7 @@
       completeUntil
     })
 
-    await window.todoAPI.create(todo)
+    await window.databaseAPI.todoAPI.create(todo)
 
     await window.localTodoStorageAPI.set(localTodoFromTodo(todo))
 
@@ -40,26 +40,12 @@
   const placeholderDescription: string = `- Milk 1L
 - Bread
 - Eggs (12)`
-
-  function relativeTypeButtonClass(itemType): string {
-    if (type !== itemType) return ''
-
-    function getColors(itemType: string): string | undefined {
-      if (itemType === 'neutral') return todoColors.normal
-      else if (itemType === 'important') return todoColors.important
-      else if (itemType === 'critical') return todoColors.critical
-      else return undefined
-    }
-
-    const colors = getColors(itemType)
-    return colors ? `${colors} shadow-none` : ''
-  }
 </script>
 
 <WindowMockup title="Add Todo" classHeader="bg-base-100!" classContent="bg-base-100!">
-  <div class=" flex-1 p-3 md:grid md:grid-cols-2 md:gap-3">
+  <div class="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden p-3 md:grid md:grid-cols-2 md:grid-rows-[minmax(0,1fr)] md:gap-3">
     <form
-      class="flex flex-col gap-3 h-full"
+      class="flex h-full min-h-0 min-w-0 flex-col gap-3 overflow-hidden"
       onsubmit={(event) => {
         event.preventDefault()
         void addTodo()
@@ -68,14 +54,11 @@
       <div>
         <Input label="Title" id="title" type="text" bind:value={title} placeholder="Product list" />
       </div>
-      <Input
-        label="Description"
-        id="description"
-        type="textarea"
-        placeholder={placeholderDescription}
-        bind:value={description}
-        class="resize-none! min-h-0 flex-1 flex flex-col [&>textarea]:h-full [&>textarea]:flex-1 code whitespace-pre overflow-x-auto"
-      />
+
+      <div class="min-h-0 min-w-0 flex-1 overflow-hidden">
+        <MarkdownEditor bind:content={description} />
+      </div>
+
       <div>
         <Input
           label="Complete until"
@@ -92,7 +75,7 @@
           collection={TodoTypes}
           getValue={(item) => item.value}
           getLabel={(item) => item.label}
-          getButtonClass={(item) => relativeTypeButtonClass(item.value)}
+          getButtonClass={(item) => relativeTypeButtonClass(type, item.value)}
           bind:value={type}
         />
       </div>

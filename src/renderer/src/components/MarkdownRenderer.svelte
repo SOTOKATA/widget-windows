@@ -1,11 +1,12 @@
 ﻿<script lang="ts">
-  import { createCustomMarked } from "../typescript/markedExtensions/custromMarked";
+  import { createCustomMarked } from '../typescript/markedExtensions/custromMarked'
   import { globals } from '../typescript/globals.svelte'
-  import type { MarkdownSettings } from "@app-types/MarkdownSettings";
+  import type { MarkdownSettings } from '@app-types/MarkdownSettings'
+  import DOMPurify from 'dompurify'
 
   interface Props {
     content: string
-    customMarkdownPreferences: MarkdownSettings
+    customMarkdownPreferences?: MarkdownSettings
   }
 
   let { content, customMarkdownPreferences }: Props = $props()
@@ -28,8 +29,7 @@
 
   function onMarkdownContentClick(event: MouseEvent): void {
     const target = event.target as HTMLElement
-    if (target.closest('[data-secret]'))
-      handleSecretClick(event)
+    if (target.closest('[data-secret]')) handleSecretClick(event)
   }
 
   let renderedContent = $derived(content ? customMarked.parse(content) : '')
@@ -42,6 +42,6 @@
   onclick={(e) => onMarkdownContentClick(e)}
 >
   <p class="markdown opacity-90 duration-200 transition-all w-full h-full">
-    {@html renderedContent}
+    {@html DOMPurify.sanitize(renderedContent)}
   </p>
 </div>

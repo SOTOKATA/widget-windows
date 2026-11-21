@@ -14,7 +14,7 @@
   size?: { width: number; height: number }
 }
 
-export type TodoType = 'neutral' | 'important' | 'critical'
+export type TodoType = 'neutral' | 'important' | 'critical' | 'accent'
 
 export interface TodoDataArgs {
   id?: string
@@ -34,6 +34,7 @@ export interface TodoDataArgs {
 
 export const TodoTypes: { label: string; value: TodoType }[] = [
   { label: 'Neutral', value: 'neutral' },
+  { label: 'Accent', value: 'accent' },
   { label: 'Important', value: 'important' },
   { label: 'Critical', value: 'critical' }
 ]
@@ -51,6 +52,7 @@ export function createTodo(data: TodoDataArgs): Todo {
     deletedAt: data.deletedAt,
     pinned: data.pinned,
     position: data.position ?? { x: 0, y: 0 },
-    size: data.size ?? { width: 4, height: 2 }
+    secret: data.secret ?? false,
+    size: data.size ?? { width: 4, height: 2 },
   }
 }

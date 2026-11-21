@@ -1,16 +1,16 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 import { localTodoStorageAPI } from './API/LocalTodoAPI'
-import { todoAPI } from './API/TodoAPI'
 import { todoModalAPI } from './API/TodoModalAPI'
 import { settingsAPI } from './API/SettingsAPI'
 import { devToolsAPI } from './API/DevToolsAPI'
 import { windowAPI } from './API/WindowAPI'
+import { databaseAPI } from './API/DatabaseAPI'
 
 if (process.contextIsolated) {
   try {
     contextBridge.exposeInMainWorld('localTodoStorageAPI', localTodoStorageAPI)
-    contextBridge.exposeInMainWorld('todoAPI', todoAPI)
+    contextBridge.exposeInMainWorld('databaseAPI', databaseAPI)
     contextBridge.exposeInMainWorld('todoModalAPI', todoModalAPI)
     contextBridge.exposeInMainWorld('settingsAPI', settingsAPI)
     contextBridge.exposeInMainWorld('devToolsAPI', devToolsAPI)

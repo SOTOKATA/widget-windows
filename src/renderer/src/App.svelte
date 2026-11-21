@@ -1,16 +1,16 @@
 <script lang="ts">
-  import TodoWindow from "./components/windows/TodoWindow.svelte";
-  import SettingsWindow from "./components/windows/SettingsWindow.svelte";
+  import TodoWindow from './components/windows/TodoWindow.svelte'
+  import SettingsWindow from './components/windows/SettingsWindow.svelte'
   import AddTodoModal from './components/modal/AddTodoModal.svelte'
   import ChangeTodoModal from './components/modal/ChangeTodoModal.svelte'
   import DeleteTodoModal from './components/modal/DeleteTodoModal.svelte'
-  import WindowMockup from "./components/windows/WindowMockup.svelte";
+  import MarkdownEditor from "./components/MarkdownEditor.svelte";
 
-  let currentRoute = $state(window.location.hash);
+  let currentRoute = $state(window.location.hash)
 
   window.addEventListener('hashchange', () => {
-    currentRoute = window.location.hash;
-  });
+    currentRoute = window.location.hash
+  })
 </script>
 
 {#if currentRoute === '#/settings'}

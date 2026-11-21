@@ -9,7 +9,7 @@
 
   onMount(async () => {
     const data = await window.todoModalAPI.getData()
-    const todo = (await window.todoAPI.getAll()).find((item) => item.id === data.todoId)
+    const todo = (await window.databaseAPI.todoAPI.getAll()).find((item) => item.id === data.todoId)
     if (!todo) return window.todoModalAPI.close()
 
     todoId = todo.id
@@ -20,7 +20,7 @@
     if (!todoId || isProcess) return
 
     isProcess = true
-    await window.todoAPI.remove(todoId)
+    await window.databaseAPI.todoAPI.remove(todoId)
     await window.localTodoStorageAPI.delete(todoId)
     await window.todoModalAPI.close()
   }

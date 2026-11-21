@@ -2,11 +2,11 @@
   import { getDaysUntil } from '../typescript/adaptiveDate'
   import { Pin, LockKeyhole } from '@lucide/svelte'
   import type { Todo } from '@app-types/Todo'
-  import { secretAreaExtension } from '../typescript/markedExtensions/secretAreaExtension'
   import { globals, onSettingsUpdate } from '../typescript/globals.svelte'
   import { createCustomMarked } from '../typescript/markedExtensions/custromMarked'
   import { onDestroy, onMount } from 'svelte'
-  import { todoColors } from "../typescript/todoColors";
+  import { todoColors } from '../typescript/todoColors'
+  import DOMPurify from 'dompurify';
 
   interface Props {
     todo: Todo
@@ -32,6 +32,8 @@
       return todoColors.critical
     else if (todo.type === 'important' || getDaysUntil(todo.completeUntil) === 'Tomorrow')
       return todoColors.important
+    else if (todo.type === 'accent')
+      return todoColors.accent
     else return todoColors.normal
   }
 
@@ -128,7 +130,7 @@
         class="markdown opacity-90 {completedTextClasses()} duration-200 transition-all w-full h-full
               {todo.secret ? 'hover:cursor-pointer' : ''} {secret ? 'blur-xs' : ''}"
       >
-        {@html renderedDescription}
+        {@html DOMPurify.sanitize(renderedDescription)}
       </p>
     </div>
   {/if}

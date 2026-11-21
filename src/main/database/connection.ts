@@ -6,7 +6,7 @@ if (!process.env.TODO_TURSO_DATABASE_URL) {
   throw new Error('TODO_TURSO_DATABASE_URL не задана')
 }
 
-export const db = connect({
+export const dbPromise = connect({
   path: path.join(app.getPath('userData'), 'widget.db'),
   url: () => process.env.TODO_TURSO_DATABASE_URL ?? null,
   authToken: process.env.TODO_TURSO_AUTH_TOKEN,

@@ -25,7 +25,7 @@
   let openContextMenu: ((mouseEvent: MouseEvent) => void) | undefined = $state()
 
   function mapTodos(
-    rows: Awaited<ReturnType<typeof window.todoAPI.getAll>>,
+    rows: Awaited<ReturnType<typeof window.databaseAPI.todoAPI.getAll>>,
     localTodos: Record<string, LocalTodo>
   ): Todo[] {
     const localTodoIds = Object.keys(localTodos)
@@ -65,18 +65,21 @@
 
   async function loadTodos(): Promise<void> {
     await saveLocalTodos(todos)
-    todos = mapTodos(await window.todoAPI.getAll(), await window.localTodoStorageAPI.getAll())
+    todos = mapTodos(
+      await window.databaseAPI.todoAPI.getAll(),
+      await window.localTodoStorageAPI.getAll()
+    )
   }
 
   async function syncTodos(): Promise<void> {
-    await window.todoAPI.sync()
+    await window.databaseAPI.sync()
     await loadTodos()
   }
 
   async function onUpdateTodo(id: string, data: Partial<Todo>): Promise<void> {
     await saveLocalTodos(todos)
     todos = mapTodos(
-      await window.todoAPI.update(id, data),
+      await window.databaseAPI.todoAPI.update(id, data),
       await window.localTodoStorageAPI.getAll()
     )
   }
@@ -124,7 +127,7 @@
       refreshBorderTransparency(s)
     })
     void loadTodos()
-    return window.todoAPI.subscribe(() => void loadTodos())
+    return window.databaseAPI.todoAPI.subscribe(() => void loadTodos())
   })
 
   async function saveLocalTodos(todos: Todo[]): Promise<void> {
@@ -151,8 +154,8 @@
 
   function refreshBorderTransparency(s: Settings): void {
     if (s.removeBorder) {
-      borderTransparency = '';
-      return;
+      borderTransparency = ''
+      return
     }
 
     borderTransparency = `rounded-md border ${borderTransparencies[s.bgTransparency]}`
