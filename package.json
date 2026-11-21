@@ -1,6 +1,6 @@
 {
   "name": "widget-windows",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Widget for todos",
   "main": "./out/main/index.js",
   "author": "sotok14.com",
