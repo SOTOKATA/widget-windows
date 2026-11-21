@@ -1,6 +1,6 @@
 {
   "name": "widget-windows",
-  "version": "1.1.8",
+  "version": "1.1.9",
   "description": "Widget for todos",
   "main": "./out/main/index.js",
   "author": "sotok14.com",
@@ -19,7 +19,8 @@
     "build:unpack": "npm run build && electron-builder --dir",
     "build:win": "npm run build && electron-builder --win",
     "build:mac": "npm run build && electron-builder --mac",
-    "build:linux": "npm run build && electron-builder --linux"
+    "build:linux": "npm run build && electron-builder --linux",
+    "publish:win": "npm run build && electron-builder --win nsis --publish always"
   },
   "build": {
     "appId": "com.sotok14.todowidget",
@@ -35,10 +36,32 @@
     ],
     "win": {
       "target": [
-        "nsis",
-        "portable"
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
       ]
-    }
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "allowElevation": true
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "SOTOKATA",
+        "repo": "widget-windows"
+      }
+    ]
   },
   "dependencies": {
     "@appulsauce/svelte-grid": "^2.2.0",
@@ -53,8 +76,9 @@
     "@tursodatabase/sync": "^0.8.3",
     "codemirror": "^6.0.2",
     "dompurify": "^3.4.18",
+    "electron-log": "^5.4.4",
     "electron-store": "^12.0.0",
-    "electron-updater": "^6.8.9",
+    "electron-updater": "^6.8.11",
     "esrap": "^2.4.0",
     "koffi": "^3.3.7",
     "marked": "^18.2.0"
@@ -69,7 +93,7 @@
     "@types/node": "^24.19.2",
     "daisyui": "^5.7.50",
     "electron": "^44.7.2",
-    "electron-builder": "^26.18.0",
+    "electron-builder": "^26",
     "electron-vite": "^6.0.0",
     "eslint": "^10.12.0",
     "eslint-plugin-svelte": "^3.23.1",

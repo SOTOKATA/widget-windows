@@ -10,6 +10,7 @@ import { pinToDesktop } from './pin'
 import { initializeTodoModalWindow } from './todoModalWindow'
 import './LocalTodoAPI'
 import { applyWindowMetrics, saveWindowMetrics } from './windowAPI'
+import { setupAutoUpdater } from './updater'
 
 let mainWindow: BrowserWindow | null = null
 
@@ -52,7 +53,6 @@ function createWindow(): BrowserWindow {
       app.quit()
     }
   })
-
 
   // For keyboard inputs
   ipcMain.on('widget:focusable', (_, value) => {
@@ -101,7 +101,7 @@ function createTray(window: BrowserWindow): Tray {
 
   tray.on('click', () => window.show())
 
-  return tray;
+  return tray
 }
 
 // This method will be called when Electron has finished
@@ -127,6 +127,8 @@ app.whenReady().then(async () => {
 
   mainWindow = createWindow()
   createTray(mainWindow)
+
+  setupAutoUpdater()
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
