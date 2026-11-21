@@ -45,6 +45,14 @@
     else return todoColors.normal
   }
 
+  function getButtonStyling(): string {
+    if (todo.completed) return 'btn-success'
+    else if (todo.type === 'critical' || getDaysUntil(todo.completeUntil) === 'Today') return 'btn-error'
+    else if (todo.type === 'important' || getDaysUntil(todo.completeUntil) === 'Tomorrow') return 'btn-warning'
+    else if (todo.type === 'accent') return 'btn-accent'
+    else return ''
+  }
+
   let unsubscribeSettingsUpdate: (() => void) | undefined = $state()
   onMount(() => {
     unsubscribeSettingsUpdate = onSettingsUpdate(
@@ -125,7 +133,7 @@
     </div>
 
     <button
-      class="btn btn-ghost btn-circle btn-xs shrink-0"
+      class="btn btn-circle btn-xs shrink-0 border-transparent bg-transparent hover:bg-transparent active:bg-transparent shadow-none"
       type="button"
       onclick={() => toggleClosed()}
     >
