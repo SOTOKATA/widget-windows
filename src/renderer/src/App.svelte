@@ -4,6 +4,7 @@
   import AddTodoModal from './components/modal/AddTodoModal.svelte'
   import ChangeTodoModal from './components/modal/ChangeTodoModal.svelte'
   import DeleteTodoModal from './components/modal/DeleteTodoModal.svelte'
+  import UpdateWindow from "./components/windows/UpdateWindow.svelte";
 
   let currentRoute = $state(window.location.hash)
 
@@ -20,6 +21,8 @@
   <ChangeTodoModal />
 {:else if currentRoute === '#/todo-modal/delete'}
   <DeleteTodoModal />
+{:else if currentRoute === '#/update'}
+  <UpdateWindow />
 {:else}
   <TodoWindow />
 {/if}

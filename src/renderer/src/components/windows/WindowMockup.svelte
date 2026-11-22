@@ -1,9 +1,11 @@
 ﻿<script lang="ts">
-  import type { Snippet } from "svelte";
-  import { X } from "@lucide/svelte";
+  import type { Snippet } from 'svelte'
+  import { X } from '@lucide/svelte'
 
   interface Props {
     children: Snippet
+    canClose?: boolean
+    canDrag?: boolean
     title?: string
     classContent?: string
     classHeader?: string
@@ -13,6 +15,8 @@
   let {
     children,
     title = 'Window',
+    canDrag = true,
+    canClose = true,
     classHeader = '',
     classWindow = '',
     classContent = ''
@@ -21,17 +25,20 @@
 
 <main class="flex flex-col min-h-screen max-h-screen w-full {classWindow}">
   <div
-    class="flex flex-row gap-3 justify-between items-center drag bg-base-300 rounded-t-md"
+    class="flex flex-row gap-3 justify-between items-center bg-base-300 rounded-t-md"
+    class:drag={canDrag}
     style="background-image: radial-gradient(currentColor 0.001em, transparent 0.048em); background-size: 6px 6px;"
   >
     <div class="bg-base-200 px-3 py-1 rounded-s-md rounded-b-none {classHeader}">
       <span class="opacity-70">{title}</span>
     </div>
-    <div class="bg-base-200 rounded-e-md rounded-b-none {classHeader}">
-      <button class="btn btn-sm btn-circle no-drag btn-ghost" onclick={() => window.close()}>
-        <X size={14} />
-      </button>
-    </div>
+    {#if canClose}
+      <div class="bg-base-200 rounded-e-md rounded-b-none {classHeader}">
+        <button class="btn btn-sm btn-circle no-drag btn-ghost" onclick={() => window.close()}>
+          <X size={14} />
+        </button>
+      </div>
+    {/if}
   </div>
 
   <div

@@ -125,10 +125,11 @@ app.whenReady().then(async () => {
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
 
+  await setupAutoUpdater()
+
+
   mainWindow = createWindow()
   createTray(mainWindow)
-
-  setupAutoUpdater()
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the

@@ -7,6 +7,7 @@ import { devToolsAPI } from './API/DevToolsAPI'
 import { windowAPI } from './API/WindowAPI'
 import { databaseAPI } from './API/DatabaseAPI'
 import { version } from '../../package.json'
+import { updateAPI } from './API/UpdateAPI'
 
 if (process.contextIsolated) {
   try {
@@ -20,6 +21,7 @@ if (process.contextIsolated) {
       appVersion: version
     })
     contextBridge.exposeInMainWorld('windowAPI', windowAPI)
+    contextBridge.exposeInMainWorld('updateAPI', updateAPI)
     contextBridge.exposeInMainWorld('widget', {
       setFocusable: (value: boolean) => ipcRenderer.send('widget:focusable', value)
     })

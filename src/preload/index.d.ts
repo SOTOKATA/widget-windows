@@ -5,6 +5,7 @@ import { SettingsAPI } from './API/SettingsAPI'
 import { DevToolsAPI } from './API/DevToolsAPI'
 import { WindowAPI } from './API/WindowAPI'
 import { DatabaseAPI } from "./API/DatabaseAPI";
+import { UpdateAPI } from './API/UpdateAPI'
 
 interface TodoPayload {
   id: string
@@ -42,6 +43,7 @@ declare global {
     todoModalAPI: TodoModalAPI
     settingsAPI: SettingsAPI
     devToolsAPI: DevToolsAPI
+    updateAPI: UpdateAPI
     widget: {
       setFocusable: (value: boolean) => void
     }

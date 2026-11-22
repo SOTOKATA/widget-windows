@@ -231,6 +231,7 @@
    duration-250 transition-colors"
 >
   <TodoHeader {todos} onSync={syncTodos} />
+  <!-- svelte-ignore a11y_no_static_element_interactions -->
   <div
     class="max-h-full overflow-auto h-full flex flex-col gap-3 no-scrollbar md:hidden"
     oncontextmenu={showContextMenu}
