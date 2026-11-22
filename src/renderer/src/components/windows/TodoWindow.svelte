@@ -210,7 +210,7 @@
   onMount(() => {
     const mediaQuery = window.matchMedia('(min-width: 768px)')
 
-    const updateMatch = (e) => {
+    const updateMatch = (e: { matches: boolean }): void => {
       fullScreen = e.matches
     }
 
@@ -230,7 +230,7 @@
   class="w-full h-full max-h-full flex flex-col gap-3 {bgTransparency} px-2 md:px-0 {borderTransparency}
    duration-250 transition-colors"
 >
-  <TodoHeader {todos} onSync={syncTodos} />
+  <TodoHeader onSync={syncTodos} />
   <!-- svelte-ignore a11y_no_static_element_interactions -->
   <div
     class="max-h-full overflow-auto h-full flex flex-col gap-3 no-scrollbar md:hidden"

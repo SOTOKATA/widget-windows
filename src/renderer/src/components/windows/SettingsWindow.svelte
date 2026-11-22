@@ -5,7 +5,6 @@
   import { onMount } from 'svelte'
   import { refreshSettings } from '../../typescript/globals.svelte'
   import MarkdownSettings from './SettingsWindowChildren/MarkdownSettings.svelte'
-  import { createMarkdownSettings } from '@app-types/MarkdownSettings'
 
   const tabs = [
     { label: 'App Settings', value: 'app' },

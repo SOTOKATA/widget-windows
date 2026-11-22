@@ -1,13 +1,11 @@
 ﻿<script lang="ts">
   import { RefreshCw } from '@lucide/svelte'
-  import type { Todo } from '@app-types/Todo'
 
   interface Props {
-    todos: Todo[]
     onSync: () => Promise<void>
   }
 
-  let { todos, onSync }: Props = $props()
+  let { onSync }: Props = $props()
 
   let isSync: boolean = $state(false)
   async function syncTodos(): Promise<void> {
@@ -18,7 +16,8 @@
 </script>
 
 <section
-  class="w-full flex flex-row gap-3 md:px-3 py-1 justify-between flex-wrap items-center drag">
+  class="w-full flex flex-row gap-3 md:px-3 py-1 justify-between flex-wrap items-center drag"
+>
   <div class="flex flex-row gap-3 items-center">
     <div class="font-bold text-lg">
       <a href="https://github.com/SOTOKATA" target="_blank" class="font-mono link">@sotok</a>

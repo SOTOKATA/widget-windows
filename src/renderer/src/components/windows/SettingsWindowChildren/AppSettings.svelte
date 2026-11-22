@@ -3,7 +3,6 @@
   import { Play, Square } from '@lucide/svelte'
   import type { Settings } from '@app-types/Settings'
   import { bgTransparencies, borderTransparencies } from '../todoWindowUtils'
-  import { globals } from '../../../typescript/globals.svelte'
   import Select from '../../Select.svelte'
 
   interface Props {
@@ -42,6 +41,7 @@
             />
 
             <div class="flex flex-col gap-1">
+              <!-- svelte-ignore a11y_label_has_associated_control -->
               <label class="label text-sm">Transparency</label>
               <div>
                 <input
@@ -53,20 +53,20 @@
                   bind:value={settings.bgTransparency}
                 />
                 <div class="flex justify-between mt-1 px-0.5 text-xs">
-                  {#each transparencies as transparency}
-                <span
-                  class="
+                  {#each transparencies as transparency (transparency)}
+                    <span
+                      class="
                 {transparency === 0
-                    ? 'text-left'
-                    : transparency === 100
-                      ? 'text-right'
-                      : 'text-center'}
+                        ? 'text-left'
+                        : transparency === 100
+                          ? 'text-right'
+                          : 'text-center'}
                 {transparency === settings.bgTransparency ? 'text-primary' : ''}
                 duration-300 transition-colors
                 "
-                >
-                  {transparency}%
-                </span>
+                    >
+                      {transparency}%
+                    </span>
                   {/each}
                 </div>
               </div>
@@ -81,7 +81,9 @@
           </div>
 
           <div class="relative bg-white h-full flex flex-col min-h-24 border-0 rounded-md p-1">
-            <div class="flex-1 {bgTransparency} {borderTransparency} flex flex-col justify-center items-center">
+            <div
+              class="flex-1 {bgTransparency} {borderTransparency} flex flex-col justify-center items-center"
+            >
               <div class="text-black opacity-60 text-xs">Window Preview</div>
             </div>
           </div>
