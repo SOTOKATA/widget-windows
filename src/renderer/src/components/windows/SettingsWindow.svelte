@@ -45,15 +45,15 @@
 
 <main class="flex flex-col min-h-screen max-h-screen w-full">
   <div
-    class="flex flex-row gap-3 justify-between items-center drag bg-base-300 rounded-t-md"
+    class="flex flex-row gap-3 justify-between items-center drag bg-base-200 rounded-t-md"
     style="background-image: radial-gradient(currentColor 0.001em, transparent 0.048em); background-size: 6px 6px;"
   >
     <div class="flex flex-row">
       {#each tabs as tab (tab.value)}
         <button
           class="btn no-drag btn-ghost btn-sm rounded-b-none {selectedTab === tab.value
-            ? 'bg-primary'
-            : 'bg-base-100'}"
+            ? 'bg-base-100'
+            : 'bg-base-200'}"
           onclick={() => (selectedTab = tab.value)}
         >
           {tab.label}
@@ -67,7 +67,7 @@
   </div>
 
   <div
-    class="bg-base-200 rounded-b-md border-b-3 overflow-auto border-base-300 flex-1 flex flex-col py-3 gap-1.5"
+    class="bg-base-100 rounded-b-md border-b-3 overflow-auto border-base-300 flex-1 flex flex-col py-3 gap-1.5"
   >
     <div class="flex-1 px-3 overflow-auto rounded-xl">
       {#if selectedTab === 'app'}
