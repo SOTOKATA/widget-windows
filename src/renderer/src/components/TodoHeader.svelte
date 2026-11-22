@@ -31,7 +31,7 @@
       class="btn btn-xs btn-neutral opacity-70 font-mono"
       onclick={() => window.devToolsAPI.openConsole()}
     >
-      dev
+      DevTools
     </button>
 
     <button
