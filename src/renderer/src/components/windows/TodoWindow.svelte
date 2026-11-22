@@ -144,6 +144,7 @@
     })
 
     settingsUpdateUnsubscribe = onSettingsUpdate((s) => {
+      refreshGridSize(s)
       refreshBgTransparency(s)
       refreshBorderTransparency(s)
     })
@@ -181,6 +182,14 @@
 
     borderTransparency = `rounded-md border ${borderTransparencies[s.bgTransparency]}`
   }
+
+  function refreshGridSize(s: Settings): void {
+    gridWidth = s.gridWidth
+    gridHeight = s.gridHeight
+  }
+
+  let gridWidth: number = $state(globals.settings.gridWidth)
+  let gridHeight: number = $state(globals.settings.gridHeight)
 
   let bgTransparency: string = $state(bgTransparencies[globals.settings.bgTransparency])
   let borderTransparency: string = $state()
@@ -233,7 +242,7 @@
 
   <!-- svelte-ignore a11y_no_static_element_interactions -->
   <div class="hidden md:block w-full h-full px-3" oncontextmenu={showContextMenu}>
-    <Grid cols={25} rows={15} collision="push" itemSize={{ height: 50 }}>
+    <Grid cols={gridWidth} rows={gridHeight} collision="push" itemSize={{ height: 50 }}>
       {#each todos as todo (todo.id)}
         <GridItem
           activeClass="opacity-30 scale-[1.02] shadow-lg"

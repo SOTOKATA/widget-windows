@@ -1,11 +1,11 @@
 <script lang="ts">
   import AppSettings from './SettingsWindowChildren/AppSettings.svelte'
   import { X } from '@lucide/svelte'
-  import type { Settings } from '@app-types/Settings'
+  import { createSettings, type Settings } from '@app-types/Settings'
   import { onMount } from 'svelte'
   import { refreshSettings } from '../../typescript/globals.svelte'
-  import MarkdownSettings from "./SettingsWindowChildren/MarkdownSettings.svelte";
-  import { createMarkdownSettings } from "@app-types/MarkdownSettings";
+  import MarkdownSettings from './SettingsWindowChildren/MarkdownSettings.svelte'
+  import { createMarkdownSettings } from '@app-types/MarkdownSettings'
 
   const tabs = [
     { label: 'App Settings', value: 'app' },
@@ -14,12 +14,8 @@
 
   let selectedTab: string = $state(tabs[0].value)
 
-  const defaults: Settings = {
-    autoLaunch: false,
-    bgTransparency: 90,
-    markdownSettings: createMarkdownSettings(),
-    removeBorder: false
-  }
+  const defaults: Settings = createSettings()
+
   let settings = $state<Settings>(defaults)
   let status = $state('')
 
@@ -32,12 +28,7 @@
   async function saveSettings(): Promise<void> {
     status = ''
     try {
-      const saved = await window.settingsAPI.save({
-        autoLaunch: settings.autoLaunch,
-        bgTransparency: settings.bgTransparency,
-        markdownSettings: createMarkdownSettings(settings.markdownSettings),
-        removeBorder: settings.removeBorder
-      })
+      const saved = await window.settingsAPI.save(createSettings(settings))
 
       if (saved) {
         await refreshSettings()
