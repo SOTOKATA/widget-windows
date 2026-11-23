@@ -24,10 +24,10 @@ function initializeIPC(): void {
     notifyTodosChanged()
     return databaseTodoActions.getAll()
   })
-  ipcMain.handle('database:todos:update', async (_, id: string, todo: Partial<Todo>) => {
+  ipcMain.handle('database:todos:update', async (event, id: string, todo: Partial<Todo>) => {
     await databaseTodoActions.update(id, todo)
     await syncAfterMutation()
-    notifyTodosChanged()
+    notifyTodosChanged(event.sender)
     return databaseTodoActions.getAll()
   })
   ipcMain.handle('database:todos:remove', async (_, id: string) => {
@@ -38,8 +38,10 @@ function initializeIPC(): void {
   })
 }
 
-function notifyTodosChanged(): void {
-  BrowserWindow.getAllWindows().forEach((window) => window.webContents.send('database:todos:changed'))
+function notifyTodosChanged(sender?: Electron.WebContents): void {
+  BrowserWindow.getAllWindows().forEach((window) => {
+    if (window.webContents !== sender) window.webContents.send('database:todos:changed')
+  })
 }
 
 async function syncAfterMutation(): Promise<void> {

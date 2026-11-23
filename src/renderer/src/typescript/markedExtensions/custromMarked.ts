@@ -5,6 +5,7 @@ import { secretAreaExtension } from './secretAreaExtension'
 export function createCustomMarked(settings: MarkdownSettings) {
   const marked = new Marked({
     async: false,
+    gfm: true,
     renderer: {
       heading({ depth, tokens }: Tokens.Heading) {
         const text = this.parser.parseInline(tokens)
@@ -63,7 +64,7 @@ export function createCustomMarked(settings: MarkdownSettings) {
       listitem(token: Tokens.ListItem) {
         const text = this.parser.parse(token.tokens)
 
-        return `<li class="${settings.li}">${text}</li>\n`
+        return `<li class="${settings.li} ${token.checked ? 'line-through italic' : ''}"${token.task ? ' data-task-item="true"' : ''}>${text}</li>\n`
       },
 
       link({ href, title, tokens }: Tokens.Link) {

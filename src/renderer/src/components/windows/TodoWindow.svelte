@@ -77,11 +77,11 @@
   }
 
   async function onUpdateTodo(id: string, data: Partial<Todo>): Promise<void> {
-    await saveLocalTodos(todos)
-    todos = mapTodos(
-      await window.databaseAPI.todoAPI.update(id, data),
-      await window.localTodoStorageAPI.getAll()
-    )
+    const todo = todos.find((item) => item.id === id)
+    if (!todo) return
+
+    await window.databaseAPI.todoAPI.update(id, data)
+    Object.assign(todo, data)
   }
 
   async function onChangeVisibilityTodo(id: string, closed: boolean): Promise<void> {

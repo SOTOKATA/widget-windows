@@ -6,8 +6,9 @@
   import { createCustomMarked } from '../typescript/markedExtensions/custromMarked'
   import { onDestroy, onMount } from 'svelte'
   import { todoColors } from '../typescript/todoColors'
-  import DOMPurify from 'dompurify';
+  import DOMPurify from 'dompurify'
   import { ChevronUp, ChevronDown } from '@lucide/svelte'
+  import { toggleMarkdownCheckbox } from '../typescript/markedExtensions/markdownCheckbox'
 
   interface Props {
     todo: Todo
@@ -21,16 +22,22 @@
     return completed ? ' line-through italic ' : ''
   }
 
+  // svelte-ignore state_referenced_locally
   let completed: boolean = $state(todo.completed ?? false)
 
   async function toggleCompleted(): Promise<void> {
-    await onUpdateTodo(todo.id, { completed })
+    await updateTodo({ completed })
+  }
+
+  async function updateTodo(data: Partial<Todo>): Promise<void> {
+    await onUpdateTodo(todo.id, data)
+    Object.assign(todo, data)
   }
 
   async function toggleClosed(): Promise<void> {
     todo.closed = !todo.closed
 
-    await onChangeVisibilityTodo?.(todo.id, todo.closed);
+    await onChangeVisibilityTodo?.(todo.id, todo.closed)
   }
 
   function bgClasses(): string {
@@ -40,17 +47,8 @@
       return todoColors.critical
     else if (todo.type === 'important' || getDaysUntil(todo.completeUntil) === 'Tomorrow')
       return todoColors.important
-    else if (todo.type === 'accent')
-      return todoColors.accent
+    else if (todo.type === 'accent') return todoColors.accent
     else return todoColors.normal
-  }
-
-  function getButtonStyling(): string {
-    if (todo.completed) return 'btn-success'
-    else if (todo.type === 'critical' || getDaysUntil(todo.completeUntil) === 'Today') return 'btn-error'
-    else if (todo.type === 'important' || getDaysUntil(todo.completeUntil) === 'Tomorrow') return 'btn-warning'
-    else if (todo.type === 'accent') return 'btn-accent'
-    else return ''
   }
 
   let unsubscribeSettingsUpdate: (() => void) | undefined = $state()
@@ -78,22 +76,51 @@
     return true
   }
 
-  function toggleSecret(event: MouseEvent): void {
-    if (!todo.secret) {
-      handleSecretClick(event)
-      return
-    }
-
-    const target = event.target as HTMLElement
-    if (target.closest('a') && !secret) return
-    else event.preventDefault()
-
-    if (target.closest('[data-secret]') && !secret) {
-      handleSecretClick(event)
-      return
-    }
-
+  function toggleSecret(): void {
+    if (!todo.secret) return
     secret = !secret
+  }
+
+  async function toggleDescriptionCheckbox(event: MouseEvent): Promise<boolean> {
+    const target = event.target as HTMLElement
+    const item = target.closest('li[data-task-item]')
+    if (!item || !todo.description) return false
+
+    const taskItems = Array.from(item.parentElement?.querySelectorAll('li[data-task-item]') ?? [])
+    const targetIndex = taskItems.indexOf(item)
+    if (targetIndex < 0) return false
+
+
+    const description = toggleMarkdownCheckbox(todo.description, targetIndex)
+    taskItems[targetIndex].classList.toggle('line-through')
+    taskItems[targetIndex].classList.toggle('italic')
+
+    if (description === todo.description) return false
+
+    await updateTodo({ description })
+
+    return true
+  }
+
+  function handleLinkClick(event: MouseEvent): boolean {
+    const target = event.target as HTMLElement
+    if (target.closest('a') && !secret) return true
+
+    event.preventDefault()
+    return false
+  }
+
+  async function handleDescriptionClick(event: MouseEvent): Promise<void> {
+    if (secret) {
+      toggleSecret()
+      return
+    }
+
+    if (handleSecretClick(event)) return
+    if (handleLinkClick(event)) return
+    if (await toggleDescriptionCheckbox(event)) return
+
+    if (todo.secret) toggleSecret()
   }
 
   let renderedDescription = $derived(todo.description ? customMarked.parse(todo.description) : '')
@@ -114,16 +141,14 @@
         onchange={() => toggleCompleted()}
       />
       <span class="font-semibold cursor-pointer truncate {completedTextClasses()}">
-      {todo.title}
-    </span>
+        {todo.title}
+      </span>
     </div>
 
     {#if todo.completeUntil}
-    <span
-      class="absolute left-1/2 -translate-x-1/2 badge-sm bg-black/20 px-2 py-0.5 rounded-md"
-    >
-      {getDaysUntil(todo.completeUntil)}
-    </span>
+      <span class="absolute left-1/2 -translate-x-1/2 badge-sm bg-black/20 px-2 py-0.5 rounded-md">
+        {getDaysUntil(todo.completeUntil)}
+      </span>
     {/if}
 
     <div class="flex flex-row gap-3 items-center ms-auto">
@@ -150,7 +175,9 @@
     <!-- svelte-ignore a11y_no_static_element_interactions -->
     <div
       class="flex flex-row gap-3 w-full items-center overflow-scroll no-scrollbar w-full h-full relative"
-      onclick={(e) => toggleSecret(e)}
+      onclick={(e) => {
+        handleDescriptionClick(e)
+      }}
     >
       {#if secret}
         <span class="absolute flex flex-col w-full h-full items-center justify-center opacity-70">
