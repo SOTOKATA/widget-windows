@@ -92,8 +92,11 @@
 
 
     const description = toggleMarkdownCheckbox(todo.description, targetIndex)
-    taskItems[targetIndex].classList.toggle('line-through')
-    taskItems[targetIndex].classList.toggle('italic')
+
+    const taskItem = taskItems[targetIndex]
+
+    taskItem.classList.toggle('line-through')
+    taskItem.classList.toggle('italic')
 
     if (description === todo.description) return false
 
@@ -103,8 +106,7 @@
   }
 
   function handleLinkClick(event: MouseEvent): boolean {
-    const target = event.target as HTMLElement
-    if (target.closest('a') && !secret) return true
+    if ((event.target as HTMLElement).closest('a') && !secret) return true
 
     event.preventDefault()
     return false
@@ -189,7 +191,11 @@
         class="markdown opacity-90 {completedTextClasses()} duration-200 transition-all w-full h-full
               {todo.secret ? 'hover:cursor-pointer' : ''} {secret ? 'blur-xs' : ''}"
       >
-        {@html DOMPurify.sanitize(renderedDescription)}
+        {#await renderedDescription then rDescription}
+          {@html DOMPurify.sanitize(rDescription, {
+            ADD_ATTR: ['target']
+          })}
+        {/await}
       </p>
     </div>
   {/if}

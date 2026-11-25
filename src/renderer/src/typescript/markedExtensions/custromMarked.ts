@@ -69,9 +69,9 @@ export function createCustomMarked(settings: MarkdownSettings) {
 
       link({ href, title, tokens }: Tokens.Link) {
         const text = this.parser.parseInline(tokens)
-        const titleAttr = title ? ` title="${title}"` : ''
+        const titleAttr = title ? `title="${title}"` : ''
 
-        return `<a href="${href}"${titleAttr} class="link" target="_blank" rel="noopener noreferrer">${text}</a>`
+        return `<a href="${href}" ${titleAttr} class="link" target="_blank" rel="noopener noreferrer">${text}</a>`
       }
     }
   })
@@ -80,5 +80,5 @@ export function createCustomMarked(settings: MarkdownSettings) {
     extensions: [secretAreaExtension]
   })
 
-  return marked;
+  return marked
 }
