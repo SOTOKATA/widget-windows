@@ -73,6 +73,7 @@
     "@lucide/svelte": "^1.70.0",
     "@tursodatabase/sync": "^0.8.3",
     "codemirror": "^6.0.2",
+    "dayjs": "^1.11.23",
     "dompurify": "^3.4.18",
     "electron-log": "^5.4.4",
     "electron-store": "^12.0.0",

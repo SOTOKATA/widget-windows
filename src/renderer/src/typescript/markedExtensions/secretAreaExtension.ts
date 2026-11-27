@@ -1,4 +1,4 @@
-﻿function findClosingParen(src: string, openIndex: number): number {
+﻿export function findClosingParen(src: string, openIndex: number): number {
   let depth = 1
   let i = openIndex + 1
 

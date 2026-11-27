@@ -14,3 +14,4 @@ export function toggleMarkdownCheckbox(markdown: string, targetIndex: number): s
     }
   )
 }
+

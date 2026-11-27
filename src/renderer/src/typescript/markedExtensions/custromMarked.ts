@@ -1,6 +1,7 @@
 ﻿import { Marked, type Tokens } from 'marked'
 import type { MarkdownSettings } from '@app-types/MarkdownSettings'
 import { secretAreaExtension } from './secretAreaExtension'
+import { commandExtension } from './markdownCommand'
 
 export function createCustomMarked(settings: MarkdownSettings) {
   const marked = new Marked({
@@ -77,7 +78,7 @@ export function createCustomMarked(settings: MarkdownSettings) {
   })
 
   marked.use({
-    extensions: [secretAreaExtension]
+    extensions: [secretAreaExtension, commandExtension]
   })
 
   return marked
