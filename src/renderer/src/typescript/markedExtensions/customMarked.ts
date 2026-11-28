@@ -78,7 +78,7 @@ export function createCustomMarked(settings: MarkdownSettings, registerInterval?
   })
 
   marked.use({
-    extensions: [createCommandExtension(marked, registerInterval), createStructureExtension()]
+    extensions: [createCommandExtension(marked, registerInterval), createStructureExtension(marked)]
   })
 
   return marked

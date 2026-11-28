@@ -9,7 +9,7 @@
   import DOMPurify from 'dompurify'
   import { ChevronUp, ChevronDown } from '@lucide/svelte'
   import { toggleMarkdownCheckbox } from '../typescript/markedExtensions/markdownCheckbox'
-  import { mountStructureComponents } from '../typescript/markedExtensions/structureExtension/structureExtension'
+  import { mountStructureComponents } from '../typescript/markedExtensions/structureExtension/structureComponentMount'
 
   interface Props {
     todo: Todo

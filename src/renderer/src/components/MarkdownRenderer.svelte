@@ -3,7 +3,7 @@
   import { globals } from '../typescript/globals.svelte'
   import type { MarkdownSettings } from '@app-types/MarkdownSettings'
   import DOMPurify from 'dompurify'
-  import { mountStructureComponents } from '../typescript/markedExtensions/structureExtension/structureExtension'
+  import { mountStructureComponents } from '../typescript/markedExtensions/structureExtension/structureComponentMount'
 
   interface Props {
     content: string
@@ -33,7 +33,9 @@
     if (target.closest('[data-secret]')) handleSecretClick(event)
   }
 
-  let renderedContent = $derived(content ? DOMPurify.sanitize(customMarked.parse(content)) : '')
+  let renderedContent = $derived(
+    content ? DOMPurify.sanitize(customMarked.parse(content), { ADD_ATTR: ['target'] }) : ''
+  )
 </script>
 
 <!-- svelte-ignore a11y_click_events_have_key_events -->
