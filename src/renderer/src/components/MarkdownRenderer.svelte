@@ -1,8 +1,9 @@
 ﻿<script lang="ts">
-  import { createCustomMarked } from '../typescript/markedExtensions/custromMarked'
+  import { createCustomMarked } from '../typescript/markedExtensions/customMarked'
   import { globals } from '../typescript/globals.svelte'
   import type { MarkdownSettings } from '@app-types/MarkdownSettings'
   import DOMPurify from 'dompurify'
+  import { mountStructureComponents } from '../typescript/markedExtensions/structureExtension/structureExtension'
 
   interface Props {
     content: string
@@ -41,7 +42,7 @@
   class="flex flex-row gap-3 w-full px-3 rounded-xl items-center"
   onclick={(e) => onMarkdownContentClick(e)}
 >
-  <p class="markdown opacity-90 duration-200 transition-all w-full h-full">
+  <div class="markdown opacity-90 duration-200 transition-all w-full h-full" use:mountStructureComponents>
     {@html renderedContent}
-  </p>
+  </div>
 </div>

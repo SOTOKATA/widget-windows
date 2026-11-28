@@ -1,9 +1,9 @@
 ﻿import { Marked, type Tokens } from 'marked'
 import type { MarkdownSettings } from '@app-types/MarkdownSettings'
-import { secretAreaExtension } from './secretAreaExtension'
-import { commandExtension } from './markdownCommand'
+import { createCommandExtension } from './commandExtension/markdownCommand'
+import { createStructureExtension } from './structureExtension/structureExtension'
 
-export function createCustomMarked(settings: MarkdownSettings) {
+export function createCustomMarked(settings: MarkdownSettings, registerInterval?: (id: ReturnType<typeof setInterval>) => void) {
   const marked = new Marked({
     async: false,
     gfm: true,
@@ -78,7 +78,7 @@ export function createCustomMarked(settings: MarkdownSettings) {
   })
 
   marked.use({
-    extensions: [secretAreaExtension, commandExtension]
+    extensions: [createCommandExtension(marked, registerInterval), createStructureExtension()]
   })
 
   return marked

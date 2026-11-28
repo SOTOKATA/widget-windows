@@ -1,16 +1,14 @@
 ﻿import dayjs from 'dayjs'
-import type { ICommand } from '../markdownCommand'
+import type { ICommand } from '../ICommand'
 
 export const dateTimeNow: ICommand = {
   name: 'date.now',
-  execute: (args) => {
+  execute: ({ args }) => {
     const template = args.join(' ').trim()
     const now = dayjs()
 
-    if (!template) {
+    if (!template)
       return now.toISOString()
-    }
-
     return now.format(template)
   }
 }

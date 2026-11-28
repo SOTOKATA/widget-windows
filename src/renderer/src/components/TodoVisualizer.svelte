@@ -3,12 +3,13 @@
   import { Pin, LockKeyhole } from '@lucide/svelte'
   import type { Todo } from '@app-types/Todo'
   import { globals, onSettingsUpdate } from '../typescript/globals.svelte'
-  import { createCustomMarked } from '../typescript/markedExtensions/custromMarked'
+  import { createCustomMarked } from '../typescript/markedExtensions/customMarked'
   import { onDestroy, onMount } from 'svelte'
   import { todoColors } from '../typescript/todoColors'
   import DOMPurify from 'dompurify'
   import { ChevronUp, ChevronDown } from '@lucide/svelte'
   import { toggleMarkdownCheckbox } from '../typescript/markedExtensions/markdownCheckbox'
+  import { mountStructureComponents } from '../typescript/markedExtensions/structureExtension/structureExtension'
 
   interface Props {
     todo: Todo
@@ -17,6 +18,12 @@
   }
 
   let { todo, onUpdateTodo, onChangeVisibilityTodo }: Props = $props()
+  const commandIntervals = new Set<ReturnType<typeof setInterval>>()
+
+  function clearCommandIntervals(): void {
+    for (const interval of commandIntervals) clearInterval(interval)
+    commandIntervals.clear()
+  }
 
   function completedTextClasses(): string {
     return completed ? ' line-through italic ' : ''
@@ -36,6 +43,7 @@
 
   async function toggleClosed(): Promise<void> {
     todo.closed = !todo.closed
+    if (todo.closed) clearCommandIntervals()
 
     await onChangeVisibilityTodo?.(todo.id, todo.closed)
   }
@@ -54,15 +62,17 @@
   let unsubscribeSettingsUpdate: (() => void) | undefined = $state()
   onMount(() => {
     unsubscribeSettingsUpdate = onSettingsUpdate(
-      (s) => (customMarked = createCustomMarked(s.markdownSettings))
+      (s) =>
+        (customMarked = createCustomMarked(s.markdownSettings, (id) => commandIntervals.add(id)))
     )
   })
 
   onDestroy(() => {
     unsubscribeSettingsUpdate?.()
+    clearCommandIntervals()
   })
 
-  let customMarked = $state(createCustomMarked(globals.settings.markdownSettings))
+  let customMarked = $state(createCustomMarked(globals.settings.markdownSettings, (id) => commandIntervals.add(id)))
 
   function handleSecretClick(event: MouseEvent): boolean {
     const target = event.target as HTMLElement
@@ -187,16 +197,17 @@
         </span>
       {/if}
       <input type="checkbox" readonly class="checkbox checkbox-sm checkbox-ghost invisible" />
-      <p
+      <div
         class="markdown opacity-90 {completedTextClasses()} duration-200 transition-all w-full h-full
               {todo.secret ? 'hover:cursor-pointer' : ''} {secret ? 'blur-xs' : ''}"
+        use:mountStructureComponents
       >
         {#await renderedDescription then rDescription}
           {@html DOMPurify.sanitize(rDescription, {
             ADD_ATTR: ['target']
           })}
         {/await}
-      </p>
+      </div>
     </div>
   {/if}
 </section>
